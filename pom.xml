@@ -15,10 +15,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-demo</name>
     <description>Demo project for Spring Boot</description>
-    
+
     <!-- 父模块打包类型必须为pom -->
     <packaging>pom</packaging>
-    
+
     <!--子模块-->
     <modules>
         <module>spring-boot-demo-starter</module>
@@ -37,6 +37,9 @@
         <org.apache.httpcomponents.httpclient.version>4.5.14</org.apache.httpcomponents.httpclient.version>
         <commons-beanutils.verseion>1.9.4</commons-beanutils.verseion>
         <com.bosssoft.nontax3.vfs.version>1.0.0-SNAPSHOT</com.bosssoft.nontax3.vfs.version>
+        <dubbo.version>2.8.4</dubbo.version>
+        <zkclient.version>0.10</zkclient.version>
+        <javassist.version>3.22.0-GA</javassist.version>
 
     </properties>
 
@@ -68,7 +71,7 @@
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <!--end  内部模块 -->
-            
+
             <!--starter spring -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -93,7 +96,7 @@
                 <artifactId>nontax3-vfs-spring-starter</artifactId>
                 <version>${com.bosssoft.nontax3.vfs.version}</version>
             </dependency>
-            
+
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-vfs2 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -114,8 +117,52 @@
                 <artifactId>httpclient</artifactId>
                 <version>${org.apache.httpcomponents.httpclient.version}</version>
             </dependency>
+
+            <!--start dubbo -->
+            <dependency>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!--end dubbo -->
+            <!-- 字节码处理 -->
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
             
         </dependencies>
+        
     </dependencyManagement>
 
     <build>
