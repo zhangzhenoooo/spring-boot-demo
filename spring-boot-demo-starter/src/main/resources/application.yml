@@ -1,7 +1,19 @@
 server:
   port: 9999
-
+  servlet:
+    context-path: /springbootdemo
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 2048
  
+spring:
+  application:
+    name: springbootdemo
+  http:
+    log-request-details: true
+    
+    
 #文件存储
 nontax3:
   vfs:

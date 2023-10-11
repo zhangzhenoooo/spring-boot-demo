@@ -34,7 +34,6 @@ public class MinIOServiceImpl implements MinIOService {
     
     @Override
     public void upload(byte[] bytes, String filePath) throws IOException {
-        baseFolder.createFile();
         String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);

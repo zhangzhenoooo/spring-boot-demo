@@ -36,12 +36,25 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
          </dependency>
+        <dependency>
+            <groupId>com.bosssoft.nontax3.vfs</groupId>
+            <artifactId>nontax3-vfs-minio</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.bosssoft.nontax3.vfs</groupId>
+            <artifactId>nontax3-vfs-spring-starter</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-vfs2</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.16</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
         <dependency>
             <groupId>commons-beanutils</groupId>
