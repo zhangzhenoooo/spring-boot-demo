@@ -1,2 +1,14 @@
 server:
   port: 9999
+
+ 
+#文件存储
+nontax3:
+  vfs:
+    baseFolder:
+    mode: minio
+    minio:
+      bucketName: pjcloud-10002
+      region: http://192.168.1.225:9000
+      secretKey: minioadmin
+      accessKey: minioadmin
