@@ -63,6 +63,7 @@ public class RoutingDataSourceConfig {
 
             }
         });
+        // 设置默认数据源
         dynamic.setDefaultTargetDataSource(operationDataSource);
         return dynamic;
     }

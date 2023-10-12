@@ -47,6 +47,7 @@
         <org.mybatis.spring.boot.mybatis.version>3.0.2</org.mybatis.spring.boot.mybatis.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <guava.version>28.2-jre</guava.version>
+        <fastjson.version>1.2.83</fastjson.version>
 
 
 
@@ -210,6 +211,13 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            
+            <!--JSON 语言解析-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
             
         </dependencies>
