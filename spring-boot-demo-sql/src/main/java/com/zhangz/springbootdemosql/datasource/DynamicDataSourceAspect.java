@@ -33,22 +33,22 @@ public class DynamicDataSourceAspect {
     
     @Before("operationServiceJoinPointExpression()")
     public void changeDataSource1() {
-        DbContextHolder.setDbType(DbContextHolder.ORALCE_OPERATION);
+        DbContextHolder.setDbType(DbContextHolder.OPERATION);
     }
 
     @Before("operationJoinPointExpression()")
     public void changeDataSource2() {
-        DbContextHolder.setDbType(DbContextHolder.ORALCE_OPERATION);
+        DbContextHolder.setDbType(DbContextHolder.OPERATION);
     }
 
     @Before("coreJoinPointExpression()")
     public void changeDataSource3() {
-        DbContextHolder.setDbType(DbContextHolder.ORALCE_CORE);
+        DbContextHolder.setDbType(DbContextHolder.CORE);
     }
 
     @Before("coreServiceJoinPointExpression()")
     public void changeDataSource4() {
-        DbContextHolder.setDbType(DbContextHolder.ORALCE_CORE);
+        DbContextHolder.setDbType(DbContextHolder.CORE);
     }
 
  

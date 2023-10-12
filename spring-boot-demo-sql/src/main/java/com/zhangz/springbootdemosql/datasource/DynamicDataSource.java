@@ -9,7 +9,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         String dbType = DbContextHolder.getDbType();
-        log.info("开始使用数据库:{}", dbType==null? DbContextHolder.ORALCE_OPERATION : dbType);
+        log.debug("开始使用数据库:{}", dbType==null? DbContextHolder.OPERATION : dbType);
        DbContextHolder.clearDbType();
         return dbType;
     }

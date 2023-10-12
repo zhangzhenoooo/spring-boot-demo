@@ -4,8 +4,8 @@ public class DbContextHolder {
     /**
      * default DataSource
      */
-    public static final String ORALCE_OPERATION = "orcale_operation";
-    public static final String ORALCE_CORE = "orcale_core";
+    public static final String OPERATION = "operation";
+    public static final String CORE = "core";
  
 
     private static final ThreadLocal contextHolder = new ThreadLocal();

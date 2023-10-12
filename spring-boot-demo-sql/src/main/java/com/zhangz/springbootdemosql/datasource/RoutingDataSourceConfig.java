@@ -23,6 +23,7 @@ import org.springframework.util.ObjectUtils;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,26 +41,27 @@ public class RoutingDataSourceConfig {
         return paginationInterceptor;
     }
 
-    @Bean(name = "operation")
-    @ConfigurationProperties(prefix = "spring.datasource.druid.operation")
+    @Bean(name = DbContextHolder.OPERATION)
+    @ConfigurationProperties(prefix = "spring.datasource.druid." + DbContextHolder.OPERATION)
     public DataSource operationDataSource() {
         return new DruidDataSource();
     }
 
-    @Bean(name = "core")
-    @ConfigurationProperties(prefix = "spring.datasource.druid.core")
+    @Bean(name = DbContextHolder.CORE)
+    @ConfigurationProperties(prefix = "spring.datasource.druid." + DbContextHolder.CORE)
     public DataSource coreDataSource() {
         return new DruidDataSource();
     }
-
+    
     @Bean
     @Primary
     public DynamicDataSource dataSource(@Qualifier("operation") DataSource operationDataSource, @Qualifier("core") DataSource coreDataSource) {
+        
         DynamicDataSource dynamic = new DynamicDataSource();
         dynamic.setTargetDataSources(new HashMap<Object, Object>() {
             {
-                put(DbContextHolder.ORALCE_OPERATION, operationDataSource);
-                put(DbContextHolder.ORALCE_CORE, coreDataSource);
+                put(DbContextHolder.OPERATION, operationDataSource);
+                put(DbContextHolder.CORE, coreDataSource);
 
             }
         });
