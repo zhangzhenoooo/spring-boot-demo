@@ -6,7 +6,7 @@ server:
     enabled: true
     mime-types: application/json
     min-response-size: 2048
- 
+
 spring:
   application:
     name: springbootdemo
@@ -17,8 +17,9 @@ spring:
     server: true
     protocol:
       port: 28888
-# 数据库
+  # 数据库
   datasource:
+    name: mysql
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       operation:
@@ -34,6 +35,23 @@ spring:
         username: PC_CORE01
         password: PC_CORE01
 
+# mybatis-plus的配置
+mybatis-plus:
+  global-config:
+    banner: false
+    id-type: 0
+    field-strategy: 2
+    capital-mode: true
+    refresh-mapper: true
+  configuration:
+    # 输出到控制台
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 输出到日志文件中 配置slf4j或者log4j2都行org.apache.ibatis.logging.log4j2.Log4j2Impl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    # 禁止日志输出
+    #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    jdbc-type-for-null: 'null'
+  mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
 
 #文件存储
 nontax3:

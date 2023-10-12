@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangz.springbootdemosql.mapper.core.ArchiveMapper">
+    <resultMap id="BaseResultMap" type="com.zhangz.springbootdemosql.entity.core.Archive">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="EINVOICECODE" property="invoiceCode" jdbcType="VARCHAR"/>
+        <result column="EINVOICENUMBER" property="invoiceNumber" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="tableName"> C_PS_E_ARCHIVE</sql>
+    
+    <select id="querybyCode" resultMap="BaseResultMap">
+        select * from
+        <include refid="tableName"/>
+        <where>
+            EINVOICECODE1 = #{invoiceCode,jdbcType=VARCHAR}
+        </where>
+    </select>
+</mapper>
