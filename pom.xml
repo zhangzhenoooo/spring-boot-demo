@@ -25,6 +25,7 @@
         <module>spring-boot-demo-common</module>
         <module>spring-boot-demo-file</module>
         <module>spring-boot-demo-api</module>
+        <module>spring-boot-demo-sql</module>
 
     </modules>
 
@@ -43,7 +44,8 @@
         <com.alibaba.spring.boot.dubbo.version>2.0.0</com.alibaba.spring.boot.dubbo.version>
         <com.alibaba.druid.version>1.2.4</com.alibaba.druid.version>
         <com.oracle.ojdbc.version>12.2.0.1.0</com.oracle.ojdbc.version>
-
+        <org.mybatis.spring.boot.mybatis.version>3.0.2</org.mybatis.spring.boot.mybatis.version>
+        <mybatis-plus.version>3.2.0</mybatis-plus.version>
     </properties>
 
     <!--dependencyManagement 统一依赖版本管理-->
@@ -73,6 +75,11 @@
                 <artifactId>spring-boot-demo-api</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.zhangz</groupId>
+                <artifactId>spring-boot-demo-sql</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
             <!--end  内部模块 -->
 
             <!--starter spring -->
@@ -81,6 +88,14 @@
                 <artifactId>lombok</artifactId>
                 <version>${org.projectlombok.lombok.version}</version>
             </dependency>
+            <!-- 连接池  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${com.alibaba.druid.version}</version>
+            </dependency>
+            
+            
             <!--end spring -->
 
             <dependency>
@@ -137,7 +152,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-         
+
             <dependency>
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-framework</artifactId>
@@ -155,29 +170,39 @@
                 <version>${com.alibaba.spring.boot.dubbo.version}</version>
             </dependency>
             <!--end dubbo -->
-            
+
             <!-- 字节码处理 -->
             <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
             </dependency>
-
-            <!-- 连接池  -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${com.alibaba.druid.version}</version>
-            </dependency>
+            
 
             <dependency>
                 <groupId>com.oracle</groupId>
                 <artifactId>ojdbc8</artifactId>
                 <version>${com.oracle.ojdbc.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
             
         </dependencies>
-        
+
     </dependencyManagement>
 
     <build>

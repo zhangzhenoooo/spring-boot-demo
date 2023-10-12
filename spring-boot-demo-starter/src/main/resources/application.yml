@@ -23,9 +23,10 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@192.168.2.20:1521:orcl
-    username: PC_CORE01
-    password: PC_CORE01
- 
+    username: OPERATION_CENTER
+    password: OPERATION_CENTER
+
+
 #文件存储
 nontax3:
   vfs:

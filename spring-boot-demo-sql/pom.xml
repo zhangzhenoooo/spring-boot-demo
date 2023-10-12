@@ -2,69 +2,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    
     <parent>
         <groupId>com.zhangz</groupId>
         <artifactId>spring-boot-demo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
-    <artifactId>spring-boot-demo-starter</artifactId>
+    
+    <artifactId>spring-boot-demo-sql</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-demo-starter</name>
-    <description>启动模块</description>
-
+    <name>spring-boot-demo-sql</name>
+    <description>rds demo</description>
+  
     <dependencies>
-        
-        <!--start  内部模块 -->
         <dependency>
-            <groupId>com.zhangz</groupId>
-            <artifactId>spring-boot-common</artifactId>
-         </dependency>
-        <dependency>
-            <groupId>com.zhangz</groupId>
-            <artifactId>spring-boot-demo-file</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.zhangz</groupId>
-            <artifactId>spring-boot-demo-api</artifactId>
-         </dependency>
-        <dependency>
-            <groupId>com.zhangz</groupId>
-            <artifactId>spring-boot-demo-sql</artifactId>
-        </dependency>
-        <!--end  内部模块 -->
 
-        <!--star spring -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        
+        <!-- 连接池  -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
         
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <!--        dubbo集成SpringBoot起步依赖-->
-        <dependency>
-            <groupId>com.alibaba.spring.boot</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-        </dependency>
-        <!--end dubbo -->
-        
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
-        <!--end spring -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+        </dependency>
         
     </dependencies>
 
