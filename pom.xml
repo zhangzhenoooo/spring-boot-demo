@@ -37,9 +37,12 @@
         <org.apache.httpcomponents.httpclient.version>4.5.14</org.apache.httpcomponents.httpclient.version>
         <commons-beanutils.verseion>1.9.4</commons-beanutils.verseion>
         <com.bosssoft.nontax3.vfs.version>1.0.0-SNAPSHOT</com.bosssoft.nontax3.vfs.version>
-        <dubbo.version>2.8.4</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
         <javassist.version>3.22.0-GA</javassist.version>
+        <org.apache.curator.version>2.8.0</org.apache.curator.version>
+        <com.alibaba.spring.boot.dubbo.version>2.0.0</com.alibaba.spring.boot.dubbo.version>
+        <com.alibaba.druid.version>1.2.4</com.alibaba.druid.version>
+        <com.oracle.ojdbc.version>12.2.0.1.0</com.oracle.ojdbc.version>
 
     </properties>
 
@@ -134,31 +137,43 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+         
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>dubbo</artifactId>
-                <version>${dubbo.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>log4j</artifactId>
-                        <groupId>log4j</groupId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${org.apache.curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${org.apache.curator.version}</version>
+            </dependency>
+            <!--        dubbo集成SpringBoot起步依赖-->
+            <dependency>
+                <groupId>com.alibaba.spring.boot</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${com.alibaba.spring.boot.dubbo.version}</version>
             </dependency>
             <!--end dubbo -->
+            
             <!-- 字节码处理 -->
             <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
+            </dependency>
+
+            <!-- 连接池  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${com.alibaba.druid.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.oracle</groupId>
+                <artifactId>ojdbc8</artifactId>
+                <version>${com.oracle.ojdbc.version}</version>
             </dependency>
             
         </dependencies>

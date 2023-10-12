@@ -1,5 +1,6 @@
 package com.zhangz.springbootdemofile.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.zhangz.springbootdemocommon.exception.BussinessException;
 import com.zhangz.springbootdemofile.config.FileConfig;
 import com.zhangz.springbootdemofile.config.MimeTypeEnum;
@@ -10,7 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.vfs2.FileObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -18,9 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystemException;
-
-@Service
 @Slf4j
+@Component
+@Service(interfaceClass = MinIOService.class,timeout = 1000)
 public class MinIOServiceImpl implements MinIOService {
     @Autowired
     private FileObject baseFolder;
@@ -30,8 +31,7 @@ public class MinIOServiceImpl implements MinIOService {
 
     @Autowired
     private FileConfig fileConfig;
-    
-    
+
     @Override
     public void upload(byte[] bytes, String filePath) throws IOException {
         String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);

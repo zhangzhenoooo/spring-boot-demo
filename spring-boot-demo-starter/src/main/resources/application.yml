@@ -12,13 +12,19 @@ spring:
     name: springbootdemo
   http:
     log-request-details: true
-    
   dubbo:
     registry: zookeeper://192.168.1.250:2181
     server: true
     protocol:
-      port: 28195
-
+      port: 28888
+# 数据库
+  datasource:
+    name: oracle
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@192.168.2.20:1521:orcl
+    username: PC_CORE01
+    password: PC_CORE01
  
 #文件存储
 nontax3:
