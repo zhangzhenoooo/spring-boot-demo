@@ -1,4 +1,4 @@
-package entity;
+package com.zhangz.springbootdemosql.entity.operation;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;

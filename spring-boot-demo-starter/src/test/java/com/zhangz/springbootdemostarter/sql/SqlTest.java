@@ -1,7 +1,7 @@
 package com.zhangz.springbootdemostarter.sql;
 
-import com.zhangz.springbootdemosql.mapper.AgencyInfoMapper;
-import entity.AgencyInfo;
+import com.zhangz.springbootdemosql.mapper.operation.AgencyInfoMapper;
+import com.zhangz.springbootdemosql.entity.operation.AgencyInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

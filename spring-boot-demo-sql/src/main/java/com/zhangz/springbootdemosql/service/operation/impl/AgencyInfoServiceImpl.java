@@ -1,13 +1,13 @@
-package com.zhangz.springbootdemosql.service.impl;
+package com.zhangz.springbootdemosql.service.operation.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.zhangz.springbootdemosql.mapper.AgencyInfoMapper;
-import com.zhangz.springbootdemosql.service.AgencyInfoService;
-import entity.AgencyInfo;
+import com.zhangz.springbootdemosql.mapper.operation.AgencyInfoMapper;
+import com.zhangz.springbootdemosql.service.operation.AgencyInfoService;
+import com.zhangz.springbootdemosql.entity.operation.AgencyInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
