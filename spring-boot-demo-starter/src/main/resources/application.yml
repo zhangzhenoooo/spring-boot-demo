@@ -38,7 +38,7 @@ spring:
 # mybatis-plus的配置
 mybatis-plus:
   global-config:
-    banner: false
+    banner: off # 关闭mybatisplus启动图标
     id-type: 0
     field-strategy: 2
     capital-mode: true
@@ -52,6 +52,8 @@ mybatis-plus:
     #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     jdbc-type-for-null: 'null'
   mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
+ 
+
 
 #文件存储
 nontax3:
