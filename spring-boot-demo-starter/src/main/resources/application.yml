@@ -38,7 +38,7 @@ spring:
 # mybatis-plus的配置
 mybatis-plus:
   global-config:
-    banner: off # 关闭mybatisplus启动图标
+    banner: off # 关闭mybatisplus启动图标 
     id-type: 0
     field-strategy: 2
     capital-mode: true
@@ -53,7 +53,33 @@ mybatis-plus:
     jdbc-type-for-null: 'null'
   mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
  
-
+es:
+  client:
+    client-01:
+      hosts: 192.168.1.221:9200
+      username: bs
+      password: bs&*()
+    client-02:
+      hosts: 192.168.1.221:9200
+      username: bs
+      password: bs&*()
+    #      测试环境
+    client-03:
+      hosts: 192.168.2.5:9200
+      username: bs
+      password: bs&*()
+    client-04:
+      hosts: 192.168.2.6:9200
+      username: bs
+      password: bs&*()
+    client-05:
+      hosts: 192.168.2.7:9200
+      username: bs
+      password: bs&*()
+    client-06:
+      hosts: 192.168.2.14:9200
+      username: bs
+      password: bs&*()
 
 #文件存储
 nontax3:

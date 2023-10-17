@@ -1,7 +1,6 @@
 package com.zhangz.springbootdemofile.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.zhangz.springbootdemocommon.exception.BussinessException;
 import com.zhangz.springbootdemofile.config.FileConfig;
 import com.zhangz.springbootdemofile.config.MimeTypeEnum;
 import com.zhangz.springbootdemofile.service.MinIOService;
@@ -19,6 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystemException;
+import com.zhangz.springbootdemocommon.exception.BussinessException;
+
 @Slf4j
 @Component
 @Service(interfaceClass = MinIOService.class,timeout = 1000)

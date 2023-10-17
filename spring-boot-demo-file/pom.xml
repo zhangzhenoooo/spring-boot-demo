@@ -19,9 +19,8 @@
 
         <dependency>
             <groupId>com.zhangz</groupId>
-            <artifactId>spring-boot-common</artifactId>
+            <artifactId>spring-boot-demo-common</artifactId>
         </dependency>
-        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
