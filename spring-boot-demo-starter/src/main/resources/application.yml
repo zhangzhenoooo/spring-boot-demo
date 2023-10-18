@@ -56,27 +56,18 @@ mybatis-plus:
 es:
   client:
     client-01:
-      hosts: 192.168.1.221:9200
-      username: bs
-      password: bs&*()
-    client-02:
-      hosts: 192.168.1.221:9200
-      username: bs
-      password: bs&*()
-    #      测试环境
-    client-03:
       hosts: 192.168.2.5:9200
       username: bs
       password: bs&*()
-    client-04:
+    client-02:
       hosts: 192.168.2.6:9200
       username: bs
       password: bs&*()
-    client-05:
+    client-03:
       hosts: 192.168.2.7:9200
       username: bs
       password: bs&*()
-    client-06:
+    client-04:
       hosts: 192.168.2.14:9200
       username: bs
       password: bs&*()

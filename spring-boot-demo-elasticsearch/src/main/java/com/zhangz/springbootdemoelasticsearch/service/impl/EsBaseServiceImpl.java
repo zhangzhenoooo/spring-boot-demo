@@ -1,63 +1,222 @@
 package com.zhangz.springbootdemoelasticsearch.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.zhangz.springbootdemocommon.exception.BussinessException;
+import com.zhangz.springbootdemocommon.exception.ExceptionCode;
+import com.zhangz.springbootdemocommon.exception.SystemException;
 import com.zhangz.springbootdemoelasticsearch.config.EsConnectionFactory;
 import com.zhangz.springbootdemoelasticsearch.service.EsBaseService;
-import com.zhangz.springbootdemoelasticsearch.service.EsIndexService;
+import com.zhangz.springbootdemoelasticsearch.utils.EsUtiles;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.Alias;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.client.IndicesClient;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.PutMappingRequest;
+import org.elasticsearch.common.UUIDs;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-@Service(interfaceClass = EsBaseService.class)
-@Component
+@Service
 @Slf4j
 public class EsBaseServiceImpl implements EsBaseService {
 
-    @Autowired
-    private EsIndexService esIndexService;
+    @Override
+    public boolean indexExist(String idxName, RestHighLevelClient client) throws Exception {
+        String[] idxNames = new String[] {idxName};
+        GetIndexRequest request = new GetIndexRequest(idxNames);
+        return client.indices().exists(request, RequestOptions.DEFAULT);
+    }
 
     @Override
-    public void createIndex(@NotNull String indexName, @NotNull Integer shardNum) throws Exception {
-        List<RestHighLevelClient> esCons = EsConnectionFactory.getEsCons();
-        for (RestHighLevelClient esCon : esCons) {
-            List<Alias> aliases = new ArrayList<>();
-            aliases.add(new Alias("test_index"));
-            esIndexService.createIndex(indexName, 1, aliases, esCon);
+    /**
+     * 删除index
+     */
+    public void deleteIndex(String idxName, RestHighLevelClient restHighLevelClient) {
+        try {
+            if (!this.indexExist(idxName, restHighLevelClient)) {
+                log.error(" idxName={} 不存在！", idxName);
+                return;
+            }
+            restHighLevelClient.indices().delete(new DeleteIndexRequest(idxName), RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            log.error("删除索引异常|{}|{}", idxName, restHighLevelClient, e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void createMapping( String indexName) throws Exception {
-          List<RestHighLevelClient> esCons = EsConnectionFactory.getEsCons();
-        XContentBuilder builder = XContentFactory.jsonBuilder()
-                .startObject()
-                .startObject("properties")
-                .startObject("address")
-                .field("type", "text")
-                .field("analyzer", "ik_max_word")
-                .endObject()
-                .startObject("userName")
-                .field("type", "keyword")
-                .endObject()
-                .startObject("userPhone")
-                .field("type", "text")
-                .field("analyzer", "ik_max_word")
-                .endObject()
-                .endObject()
-                .endObject();
- 
-        for (RestHighLevelClient esclient : esCons) {
-            esIndexService.createMapping(builder,indexName, esclient);
+    public void createIndex(String indexName, Integer shardNum, Collection<Alias> aliases, RestHighLevelClient client) throws Exception {
+        // 创建索引
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+        // 设置分片
+        Settings settings = Settings.builder()
+            // 分片
+            .put("index.number_of_shards", shardNum)
+            // 副本
+            .put("index.number_of_replicas", shardNum).build();
+        createIndexRequest.settings(settings);
+        // 别名
+        if (!CollectionUtils.isEmpty(aliases)) {
+            createIndexRequest.aliases(aliases);
+        }
+
+        IndicesClient indices = client.indices();
+        CreateIndexResponse createIndexResponse = indices.create(createIndexRequest, RequestOptions.DEFAULT);
+        if (!createIndexResponse.isAcknowledged()) {
+            log.error("索引创建失败|{}|{}", indexName, client);
+            throw new BussinessException("索引创建失败");
+        }
+
+    }
+
+    @Override
+    public void createIndex(String indexName, Integer shardNum, Collection<Alias> aliases, Class clazz, RestHighLevelClient client) throws Exception {
+        // 创建索引
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+        // 设置分片
+        Settings settings = Settings.builder()
+            // 分片
+            .put("index.number_of_shards", shardNum)
+            // 副本
+            .put("index.number_of_replicas", shardNum).build();
+        createIndexRequest.settings(settings);
+        // 别名
+        if (!CollectionUtils.isEmpty(aliases)) {
+            createIndexRequest.aliases(aliases);
+        }
+        // mapping
+        XContentBuilder xContentBuilder = EsUtiles.generateBuilder(clazz);
+        createIndexRequest.mapping(xContentBuilder);
+
+        IndicesClient indices = client.indices();
+        CreateIndexResponse createIndexResponse = indices.create(createIndexRequest, RequestOptions.DEFAULT);
+
+        if (!createIndexResponse.isAcknowledged()) {
+            log.error("索引创建失败|{}|{}", indexName, client);
+            throw new BussinessException("索引创建失败");
+        }
+    }
+
+    @Override
+    public void createMapping(XContentBuilder xContentBuilder, String indexName, RestHighLevelClient client) throws BussinessException, IOException {
+        PutMappingRequest putMappingRequest = new PutMappingRequest(indexName);
+        putMappingRequest.source(xContentBuilder);
+
+        AcknowledgedResponse acknowledgedResponse = client.indices().putMapping(putMappingRequest, RequestOptions.DEFAULT);
+        if (!acknowledgedResponse.isAcknowledged()) {
+            log.error("索引mapping创建失败|{}|{}|{}", indexName, client, xContentBuilder);
+            throw new BussinessException("索引创建失败");
+        }
+
+    }
+
+    @Override
+    public void createMapping(RestHighLevelClient client, String indexName, Class clazz) throws IOException, BussinessException {
+        XContentBuilder xContentBuilder = EsUtiles.generateBuilder(clazz);
+        this.createMapping(xContentBuilder, indexName, client);
+    }
+
+    @Override
+    public void createDocBatch(Collection<Map<String, Object>> maps, RestHighLevelClient restHighLevelClient, String index) throws BussinessException, IOException {
+        BulkRequest bulkRequest = new BulkRequest();
+        if (CollectionUtils.isEmpty(maps)) {
+            for (Map<String, Object> map : maps) {
+                IndexRequest indexRequest = new IndexRequest(index).id(UUIDs.base64UUID()).source(map);
+                bulkRequest.add(indexRequest);
+            }
+        }
+
+        RestHighLevelClient esCon = EsConnectionFactory.getEsCon(1);
+        BulkResponse bulk = esCon.bulk(bulkRequest, RequestOptions.DEFAULT);
+        int status = bulk.status().getStatus();
+        if (RestStatus.OK.getStatus() == status) {
+            log.error("文档上传失败|{}|{}|{}", maps, index, restHighLevelClient);
+            throw new BussinessException("文档上传失败");
+        }
+    }
+
+    @Override
+    public void deleteByDocId(RestHighLevelClient restHighLevelClient, String index, String id) throws IOException {
+        DeleteRequest deleteRequest = new DeleteRequest(index);
+        deleteRequest.id(id);
+        restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
+    }
+
+    @Override
+    public String queryByDocId(RestHighLevelClient restHighLevelClient, String index, String id) throws IOException {
+        GetRequest getRequest = new GetRequest(index);
+        getRequest.id(id);
+        GetResponse documentFields = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+        String s = documentFields.toString();
+        return s;
+    }
+
+    @Override
+    public void modifyByDocId(RestHighLevelClient restHighLevelClient, String index, String id, Map<String, Object> doc) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest(index, index);
+        updateRequest.doc(doc);
+        restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+    }
+
+    @Override
+    public List<Map<String, Object>> query(SearchSourceBuilder searchSourceBuilder, String index, RestHighLevelClient restHighLevelClient) {
+        SearchRequest searchRequest = new SearchRequest(index);
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse search = null;
+        try {
+            search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("查询es异常|{}|{}", searchSourceBuilder, restHighLevelClient, e);
+            return new ArrayList<>(0);
+        }
+
+        SearchHit[] hits = search.getHits().getHits();
+        List<Map<String, Object>> list = new ArrayList<>(hits.length);
+        for (SearchHit hit : hits) {
+            hit.getSourceAsMap();
+            list.add(hit.getSourceAsMap());
+        }
+        return list;
+    }
+    
+    @Override
+    public Aggregations aggsSearch(RestHighLevelClient restHighLevelClient, String index, SearchSourceBuilder searchSourceBuilder) throws SystemException {
+        SearchRequest searchRequest = new SearchRequest(index);
+        try {
+            SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+              Aggregations aggregations = searchResponse.getAggregations();
+              return aggregations;
+         } catch (IOException e) {
+            log.error("聚合查询es异常|{}|{}",searchSourceBuilder,index,e);
+            throw new SystemException(ExceptionCode.INNER,"es查询异常");
         }
     }
 }

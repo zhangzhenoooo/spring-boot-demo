@@ -27,6 +27,7 @@ public class EsConnectionFactory implements ApplicationContextAware, Application
     private static HashMap<String, RestHighLevelClient> esConns = new HashMap<>();
 
     private ApplicationContext context;
+    private final static  String CLIENT_PRO = "restHighLevelClient";
     
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -47,9 +48,9 @@ public class EsConnectionFactory implements ApplicationContextAware, Application
     }
  
 
-    public static List<RestHighLevelClient> getEsCons(String[] clientNames) throws BussinessException {
+    public static List<RestHighLevelClient> getEsCons(int[] clientNames) throws BussinessException {
         List<RestHighLevelClient> esClients = new ArrayList<>();
-        for (String clientName : clientNames) {
+        for (int clientName : clientNames) {
             esClients.add(getEsCon(clientName));
         }
         return esClients;
@@ -62,7 +63,7 @@ public class EsConnectionFactory implements ApplicationContextAware, Application
      * @return
      * @throws BussinessException
      */
-    public static RestHighLevelClient getEsCon(String clientName) throws BussinessException {
+    public static RestHighLevelClient getEsCon(int clientName) throws BussinessException {
         if (CollectionUtils.isEmpty(esConns)) {
             try {
                 Thread.sleep(5000L);
@@ -70,7 +71,7 @@ public class EsConnectionFactory implements ApplicationContextAware, Application
                 log.error("获取es连接的线程，休眠出现异常", e);
             }
         }
-        String key = clientName;
+        String key = CLIENT_PRO +  clientName;
 
         // 再次获取
         RestHighLevelClient restHighLevelClient = esConns.get(key);
