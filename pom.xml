@@ -94,6 +94,13 @@
                 <artifactId>spring-boot-demo-elasticsearch</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.zhangz</groupId>
+                <artifactId>spring-boot-demo-cache</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            
             <!--end  内部模块 -->
 
             <!--starter spring -->

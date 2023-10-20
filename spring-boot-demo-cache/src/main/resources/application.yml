@@ -1,0 +1,23 @@
+
+ 
+    
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+#    name: agency-operation
+  http:
+    log-request-details: true
+  redis:
+    database: 0
+    timeout: 2000
+    host: 192.168.1.250
+    port: 6379
+    password: bosssoft
+ 
+  cache:
+    type: none
+j2cache:
+  config-location: /j2cache.properties
+  redis-client: lettuce
+  open-spring-cache: true
