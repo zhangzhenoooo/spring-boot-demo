@@ -3,6 +3,7 @@ package com.zhangz.springbootdemocache.controller;
 import com.alibaba.fastjson.JSON;
 import com.zhangz.springbootdemocache.entity.User;
 import com.zhangz.springbootdemocache.service.UserService;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,8 @@ public class UserController {
 
     @GetMapping("/getUser")
     @ResponseBody
-    public String getUser() {
-        User u = userService.getOneDemoUser("123456");
+    public String getUser(@Param("userId") String userId) {
+        User u = userService.getOneDemoUser(userId);
         return JSON.toJSONString(u);
     }
 }
