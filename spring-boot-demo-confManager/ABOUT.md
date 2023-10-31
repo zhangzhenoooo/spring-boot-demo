@@ -5,3 +5,19 @@
 ## 1 nacos 安装 (linux)
 >参考文档:  
 [Nacos安装配置详细流程](https://blog.csdn.net/qq_52830988/article/details/128319218)
+
+### 1.1 下载nacos 
+ps:选择与springboot 和 cloud 对应的nacos版本  
+版本对照：(https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)  
+```shell
+wget https://github.com/alibaba/nacos/archive/refs/tags/2.0.0.tar.gz
+```
+### 1.2 解压
+ 进入压缩包所在的文件夹:
+```shell
+[root@localhost ~]# cd /opt/bssoft/nacos
+```
+ 把文件解压到/opt/bssoft/nacos 目录下:  
+```shell
+[root@localhost upload]# tar -zxvf 2.0.0.tar.gz
+```
