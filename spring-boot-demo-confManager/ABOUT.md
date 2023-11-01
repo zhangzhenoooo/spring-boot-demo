@@ -5,6 +5,7 @@
 
 ## 1 nacos 安装 (linux)
 
+安装位置 192.168.1.225 /opt/bssoft/nacos/nacos
 > 参考文档:  
 [Nacos安装配置详细流程](https://blog.csdn.net/qq_52830988/article/details/128319218)
 
@@ -109,11 +110,37 @@ Nacos默认有自带嵌入式数据库derby，但是如果做集群模式的话�
 
 ### 2.1 配置nacos持久化
 
-#### 2.1.1 修改数据库
+#### 2.1.1 修改 application.properties配置
 
 增加支持mysql数据源配置（目前只支持mysql，版本要求：5.6.5+）; 文件位置： nacos/conf/application.properties
 
 ```yml
+#*************** Config Module Related Configurations ***************#
+### If user MySQL as datasource:
+spring.datasource.platform=mysql
+
+  ### Count of DB:
+
+db.num=1
+db.url.0=jdbc:mysql://192.168.1.188:3306/pc_coare0610ttt?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+  #db.url.1=jdbc:mysql://11.163.152.9:3306/nacos_devtest?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+db.user=root
+db.password=root
+```
+
+#### 2.1.2 初始化nacos脚本
+
+初始化nacos 脚本
+
+```java
+/nacos/conf 下的nacos-mysql.sql脚本
+```
+
+#### 2.1.2 重启nacos
+
+我重启后之前配置的配置信息不见了？
+
+```java
 
 ```
 
@@ -210,20 +237,26 @@ spring:
 > 点击发布，则会同步配置到项目，可通过日志查看是否生效
 
 ## 4. nacos 控制台的基本使用
+
 [Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
 
+## 5. nacos 用法 example
 
-## 5. nacos 用法 example 
-### 5.1  热配置 用例
-#### 5.1 @value 注解 
-  在使用@Value注入值的类上增加注解@RefreshScope
+### 5.1 热配置 用例
+
+#### 5.1 @value 注解
+
+在使用@Value注入值的类上增加注解@RefreshScope
+
 ```java
 @RefreshScope
 
 @Value("${system.test.shardvalue}")
 private String shardvalue;
 ```
+
 #### @ConfigurationProperties 注解
+
 ```java
 
 @Component
