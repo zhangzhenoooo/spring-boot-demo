@@ -212,3 +212,25 @@ spring:
 ## 4. nacos 控制台的基本使用
 [Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
 
+
+## 5. nacos 用法 example 
+### 5.1  热配置 用例
+#### 5.1 @value 注解 
+  在使用@Value注入值的类上增加注解@RefreshScope
+```java
+@RefreshScope
+
+@Value("${system.test.shardvalue}")
+private String shardvalue;
+```
+#### @ConfigurationProperties 注解
+```java
+
+@Component
+@Data
+@ConfigurationProperties(prefix = "system.test")
+public class SystemTestProperties {
+    private String shardvalue;
+}
+```
+
