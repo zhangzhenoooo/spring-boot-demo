@@ -5,18 +5,24 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>2.3.12.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    
     <groupId>com.zhangz</groupId>
     <artifactId>spring-boot-demo-confManager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-demo-confManager</name>
-    <description>Demo project for Spring Boot</description>
+    <description>集成 nacos 配置中心 demo </description>
+    
     <properties>
-        <java.version>17</java.version>
+        <java.version>8</java.version>
+        <com.alibaba.cloud.alibaba.nacos>2.1.0.RELEASE</com.alibaba.cloud.alibaba.nacos>
+        <com.alibaba.cloud.alibaba.dependencies>2.2.9.RELEASE</com.alibaba.cloud.alibaba.dependencies>
+
     </properties>
     <dependencies>
+ 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -32,6 +38,28 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+            <version>${com.alibaba.cloud.alibaba.dependencies}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+        <!-- 注册中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${com.alibaba.cloud.alibaba.nacos}</version>
+        </dependency>
+        <!-- 配置中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>${com.alibaba.cloud.alibaba.nacos}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -48,14 +76,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
+        
         </plugins>
     </build>
 
