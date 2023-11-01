@@ -7,6 +7,7 @@ spring:
         server-addr: 192.168.1.225:8848
         # 集群
         cluster-name: test
+        namespace: 12314
       config:
         server-addr: 192.168.1.225:8848
         # 指定分组 根据项目分组
@@ -16,6 +17,20 @@ spring:
         file-extension: yaml
   profiles:
     active: dev
+    
+    
+dubbo:
+  scan:
+    base-packages: com.zhangz.springbootdemoconfmanager.service.impl
+  protocols:
+    dubbo:
+      name: dubbo
+      port: 20881
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    parameters:
+      namespace: 12314
+
     
 system:
   test: 
