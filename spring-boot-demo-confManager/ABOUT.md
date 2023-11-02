@@ -236,6 +236,12 @@ spring:
 > 增加配置信息  
 > 点击发布，则会同步配置到项目，可通过日志查看是否生效
 
+### 3.4 共享配置
+```text
+    服务名.yaml 将 系统同一配置写在里面 
+```
+### 3.4 配置优先级
+![img_1.png](img_1.png)
 ## 4. nacos 控制台的基本使用
 
 [Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
