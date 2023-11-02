@@ -20,7 +20,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public String getShardvalue() {
-        return shardvalue;
+        return "shardvalue";
     }
 
     @Override

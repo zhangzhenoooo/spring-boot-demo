@@ -6,8 +6,8 @@ spring:
       discovery:
         server-addr: 192.168.1.225:8848
         # 集群
-        cluster-name: test
-        namespace: configManager
+#        cluster-name: test
+#        namespace: configManager
       config:
         server-addr: 192.168.1.225:8848
         # 指定分组 根据项目分组
@@ -30,6 +30,7 @@ dubbo:
       port: 20881
   registry:
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    group: testGroup
 
 
 

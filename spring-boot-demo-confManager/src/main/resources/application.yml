@@ -7,41 +7,7 @@ server:
     mime-types: application/json
     min-response-size: 2048
 
-
-spring:
-  application:
-    name: configManager
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.1.225:8848
-        # 集群
-        cluster-name: test
-        namespace: 12314
-      config:
-        server-addr: 192.168.1.225:8848
-        # 指定分组 根据项目分组
-        group: DEFAULT_GROUP
-        # 指定文件名，没有则默认${spring.application.name}
-        # 指定读取配置中心文件后缀
-        file-extension: yaml
-  profiles:
-    active: dev
-
-
-dubbo:
-  scan:
-    base-packages: com.zhangz.springbootdemoconfmanager.service.impl
-  protocols:
-    dubbo:
-      name: dubbo
-      port: 20881
-  registry:
-    address: nacos://${spring.cloud.nacos.discovery.server-addr}
-    parameters:
-      namespace: 12314
-
-
+#公共配置 ： redis database es  等
 system:
   test:
     #    系统共享变量
