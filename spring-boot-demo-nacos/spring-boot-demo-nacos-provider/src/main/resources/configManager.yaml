@@ -1,0 +1,5 @@
+#公共配置 ： redis database es  等
+system:
+  test:
+    #    系统共享变量
+    shardvalue: shareValue1

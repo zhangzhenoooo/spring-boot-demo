@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: spring-boot-demo-nacos-customer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.225:8848
+        # 集群
+#        cluster-name: test
+#        namespace: configManager
+      config:
+        server-addr: 192.168.1.225:8848
+        # 指定分组 根据项目分组
+        group: customer
+        # 指定文件名，没有则默认${spring.application.name}
+        # 指定读取配置中心文件后缀
+        file-extension: yaml
+  profiles:
+    active: dev
+    
+    
+dubbo:
+  application:
+    name: spring-boot-demo-nacos-customer
+#  scan:
+#    base-packages: com.zhangz.springbootdemonacosprovider.service.impl
+  protocols:
+    dubbo:
+      name: dubbo
+      port: 20882
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    group: nacosDemo
+
+
+
+ 

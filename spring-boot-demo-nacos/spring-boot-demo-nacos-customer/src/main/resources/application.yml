@@ -1,0 +1,14 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /spring-boot-demo-nacos-customer
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 2048
+
+#公共配置 ： redis database es  等
+system:
+  test:
+    #    系统共享变量
+    shardvalue: shareValue1
