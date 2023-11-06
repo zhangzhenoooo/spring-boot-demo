@@ -36,7 +36,7 @@ spring:
         password: OPERATION_CENTER
         filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
       demo:
-        url: jdbc:h2:~/demoDatabase
+        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/demoDatabase
         driver-class-name: org.h2.Driver
         username: sa
         password: 
@@ -108,7 +108,14 @@ nontax3:
     baseFolder:
     mode: minio
     minio:
-      bucketName: pjcloud-10002
+      bucketName: pjcloud-10007
       region: http://192.168.1.225:9000
-      secretKey: minioadmin
-      accessKey: minioadmin
+      secretKey: lzXzieXS1N2G8Q2v25XRQ9pVor8cK8mgZUurzWWi
+      accessKey: sNTbSRegtbpwFKs4QPxI
+
+
+#是否激活 swagger true or false
+swagger:
+  enable: true
+  #文档版本
+  version: V2.0

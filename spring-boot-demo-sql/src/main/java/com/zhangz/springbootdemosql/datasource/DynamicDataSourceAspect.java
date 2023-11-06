@@ -30,9 +30,9 @@ public class DynamicDataSourceAspect {
     @Pointcut("execution(* com.zhangz.springbootdemosql.service.core.*Service.*(..))")
     public void coreServiceJoinPointExpression(){}
 
-    @Pointcut("execution(* com.zhangz.springbootdemosql.mapper.h2.*Mapper.*(..))")
+    @Pointcut("execution(* com.zhangz.springbootdemosql.mapper.demo.*Mapper.*(..))")
     public void h2JoinPointExpression(){}
-    @Pointcut("execution(* com.zhangz.springbootdemosql.service.h2.*Service.*(..))")
+    @Pointcut("execution(* com.zhangz.springbootdemosql.service.demo.*Service.*(..))")
     public void h2ServiceJoinPointExpression(){}
     
     

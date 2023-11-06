@@ -35,6 +35,7 @@
         <java.version>1.8</java.version>
         <org.projectlombok.lombok.version>1.18.6</org.projectlombok.lombok.version>
         <io.minio.version>7.1.0</io.minio.version>
+        <aws-java-sdk-s3.version>1.12.263</aws-java-sdk-s3.version>
         <org.apache.commons.commons-vfs2.version>2.9.0</org.apache.commons.commons-vfs2.version>
         <org.apache.httpcomponents.httpclient.version>4.5.14</org.apache.httpcomponents.httpclient.version>
         <commons-beanutils.verseion>1.9.4</commons-beanutils.verseion>
@@ -52,7 +53,10 @@
         <elasticsearch.version>7.4.0</elasticsearch.version>
         <com.alibaba.easyexcel.version>3.0.5</com.alibaba.easyexcel.version>
         <com.h2database.version>2.1.214</com.h2database.version>
-
+        <hutool-all.version>5.8.3</hutool-all.version>
+        <swagger2.version>2.9.2</swagger2.version>
+        <swagger-ui.version>1.9.6</swagger-ui.version>
+        <swagger-models.version>1.5.22</swagger-models.version>
         
     </properties>
 
@@ -137,6 +141,13 @@
                 <artifactId>minio</artifactId>
                 <version>${io.minio.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-s3</artifactId>
+                <version>${aws-java-sdk-s3.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>com.bosssoft.nontax3.vfs</groupId>
                 <artifactId>nontax3-vfs-minio</artifactId>
@@ -259,7 +270,30 @@
                 <artifactId>easyexcel</artifactId>
                 <version>${com.alibaba.easyexcel.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-all.version}</version>
+            </dependency>
             
+            <!--swagger start -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-models.version}</version>
+            </dependency>
+            <!--swagger end -->
+
         </dependencies>
 
     </dependencyManagement>
