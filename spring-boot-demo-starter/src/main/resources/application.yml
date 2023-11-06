@@ -32,8 +32,38 @@ spring:
       core:
         url: jdbc:oracle:thin:@192.168.2.20:1521/orcl
         driver-class-name: oracle.jdbc.driver.OracleDriver
-        username: PC_CORE01
-        password: PC_CORE01
+        username: OPERATION_CENTER
+        password: OPERATION_CENTER
+        filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
+      demo:
+        url: jdbc:h2:~/demoDatabase
+        driver-class-name: org.h2.Driver
+        username: sa
+        password: 
+#  h2:
+#    console:
+#      # h2嵌入式数据库控制台，可通过浏览器访问
+#      path: /h2-console
+#      enabled: true
+
+
+  thymeleaf:
+    # 开启视图解析
+    enabled: true
+    # 编码格式
+    encoding: UTF-8
+    # 前缀配置
+    prefix: classpath*:/templates/
+    # 后缀配置
+    suffix: .html
+    # 是否使用页面缓存 开发方便不启用
+    cache: false
+    # 格式
+    mode: HTML5
+    # 配置类型
+    servlet:
+      content-type: text/html
+
 
 # mybatis-plus的配置
 mybatis-plus:
@@ -52,7 +82,7 @@ mybatis-plus:
     #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     jdbc-type-for-null: 'null'
   mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
- 
+
 es:
   client:
     client-01:

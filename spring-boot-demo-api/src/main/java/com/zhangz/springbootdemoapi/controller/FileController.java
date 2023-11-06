@@ -12,17 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileInputStream;
 import java.nio.file.Paths;
 
+
 @RestController
 @RequestMapping("/file")
 @Slf4j
 public class FileController {
-    
+
     @Autowired
     private MinIOService minIOService;
-    
+
     @PostMapping("/upload")
     @ResponseBody
-    public String upload() throws Exception{
+    public String upload() throws Exception {
         String path = Paths.get("BBB.pdf").toAbsolutePath().toString();
         byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(path));
         String filePath = "test/bbb.pdf";

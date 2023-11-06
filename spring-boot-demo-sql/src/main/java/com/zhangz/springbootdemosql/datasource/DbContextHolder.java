@@ -6,6 +6,8 @@ public class DbContextHolder {
      */
     public static final String OPERATION = "operation";
     public static final String CORE = "core";
+
+    public static final String DEMO = "demo";
  
 
     private static final ThreadLocal contextHolder = new ThreadLocal();

@@ -23,7 +23,6 @@ import org.springframework.util.ObjectUtils;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,16 +51,24 @@ public class RoutingDataSourceConfig {
     public DataSource coreDataSource() {
         return new DruidDataSource();
     }
-    
+
+    @Bean(name = DbContextHolder.DEMO)
+    @ConfigurationProperties(prefix = "spring.datasource.druid." + DbContextHolder.DEMO)
+    public DataSource demoDataSource() {
+        return new DruidDataSource();
+    }
+
     @Bean
     @Primary
-    public DynamicDataSource dataSource(@Qualifier("operation") DataSource operationDataSource, @Qualifier("core") DataSource coreDataSource) {
-        
+    public DynamicDataSource dataSource(@Qualifier(DbContextHolder.OPERATION) DataSource operationDataSource, @Qualifier(DbContextHolder.CORE) DataSource coreDataSource,
+        @Qualifier(DbContextHolder.DEMO) DataSource demoDataSource) {
+
         DynamicDataSource dynamic = new DynamicDataSource();
         dynamic.setTargetDataSources(new HashMap<Object, Object>() {
             {
                 put(DbContextHolder.OPERATION, operationDataSource);
                 put(DbContextHolder.CORE, coreDataSource);
+                put(DbContextHolder.DEMO, demoDataSource);
 
             }
         });
@@ -73,7 +80,7 @@ public class RoutingDataSourceConfig {
     @Bean("sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(MybatisPlusProperties properties) throws Exception {
         MybatisSqlSessionFactoryBean sqlSessionFactory = new MybatisSqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(dataSource(operationDataSource(), coreDataSource()));
+        sqlSessionFactory.setDataSource(dataSource(operationDataSource(), coreDataSource(), demoDataSource()));
 
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setJdbcTypeForNull(JdbcType.NULL);

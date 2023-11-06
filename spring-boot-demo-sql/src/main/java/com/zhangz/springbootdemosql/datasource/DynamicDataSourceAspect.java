@@ -29,6 +29,11 @@ public class DynamicDataSourceAspect {
     public void coreJoinPointExpression(){}
     @Pointcut("execution(* com.zhangz.springbootdemosql.service.core.*Service.*(..))")
     public void coreServiceJoinPointExpression(){}
+
+    @Pointcut("execution(* com.zhangz.springbootdemosql.mapper.h2.*Mapper.*(..))")
+    public void h2JoinPointExpression(){}
+    @Pointcut("execution(* com.zhangz.springbootdemosql.service.h2.*Service.*(..))")
+    public void h2ServiceJoinPointExpression(){}
     
     
     @Before("operationServiceJoinPointExpression()")
@@ -51,6 +56,15 @@ public class DynamicDataSourceAspect {
         DbContextHolder.setDbType(DbContextHolder.CORE);
     }
 
- 
+    @Before("h2JoinPointExpression()")
+    public void changeDataSource5() {
+        DbContextHolder.setDbType(DbContextHolder.DEMO);
+    }
+
+    @Before("h2ServiceJoinPointExpression()")
+    public void changeDataSource6() {
+        DbContextHolder.setDbType(DbContextHolder.DEMO);
+    }
+
 
 }

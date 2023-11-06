@@ -20,6 +20,11 @@
         <!--start  内部模块 -->
         <dependency>
             <groupId>com.zhangz</groupId>
+            <artifactId>spring-boot-demo-web</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zhangz</groupId>
             <artifactId>spring-boot-demo-common</artifactId>
          </dependency>
         <dependency>
