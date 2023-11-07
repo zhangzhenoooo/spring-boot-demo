@@ -16,7 +16,7 @@ import java.io.Serializable;
 
 public class UploadTask implements Serializable {
     @TableId("ID")
-    private int id;
+    private String id;
 
     @TableField("UPLOAD_ID")
     private String uploadId;

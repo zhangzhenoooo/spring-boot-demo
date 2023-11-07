@@ -2,6 +2,7 @@ package com.zhangz.springbootdemofile.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.excel.util.DateUtils;
@@ -9,6 +10,7 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.zhangz.springbootdemocommon.exception.BussinessException;
+import com.zhangz.springbootdemocommon.utils.UUIDUtils;
 import com.zhangz.springbootdemofile.config.FileConfig;
 import com.zhangz.springbootdemofile.config.MimeTypeEnum;
 import com.zhangz.springbootdemofile.dto.InitTaskParam;
@@ -35,10 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.FileSystemException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -119,7 +118,7 @@ public class MinIOServiceImpl implements MinIOService {
         String bucketName = minioProperties.getBucket();
         String fileName = param.getFileName();
         String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-        String key = StrUtil.format("{}/{}.{}", DateUtils.format(currentDate, "YYYY-MM-dd"), UUID.randomUUID(), suffix);
+        String key = StrUtil.format("{}/{}.{}", DateUtils.format(currentDate, "YYYY-MM-dd"), UUIDUtils.randomUUID() , suffix);
         String contentType = MediaTypeFactory.getMediaType(key).orElse(MediaType.APPLICATION_OCTET_STREAM).toString();
         // 可在 ObjectMetadata 中设置加密方式等
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -132,10 +131,21 @@ public class MinIOServiceImpl implements MinIOService {
 
         UploadTask task = new UploadTask();
         int chunkNum = (int)Math.ceil(param.getTotalSize() * 1.0 / param.getChunkSize());
-        task.setBucketName(minioProperties.getBucket()).setChunkNum(chunkNum).setChunkSize(param.getChunkSize()).setTotalSize(param.getTotalSize())
+        task.setId(UUIDUtils.randomUUID()).setBucketName(minioProperties.getBucket()).setChunkNum(chunkNum).setChunkSize(param.getChunkSize()).setTotalSize(param.getTotalSize())
             .setFileIdentifier(param.getIdentifier()).setFileName(fileName).setObjectKey(key).setUploadId(uploadId);
         uploadTaskService.save(task);
-        return new TaskInfoDTO().setFinished(false).setTaskRecord(TaskRecordDTO.convertFromEntity(task)).setPath(getPath(bucketName, key));
+
+        // 获取分片上传链接
+        Set<Pair<Integer,String>> urls = new HashSet<>(chunkNum);
+        for (int i = 0; i < chunkNum; i++) {
+            Map<String, String> params = new HashMap<>();
+            params.put("partNumber", String.valueOf(i));
+            params.put("uploadId", uploadId);
+            String url = genPreSignUploadUrl(task.getBucketName(), task.getObjectKey(), params);
+            urls.add(Pair.of(i,url));
+        }
+
+        return new TaskInfoDTO().setSignUploadUrs(urls).setFinished(false).setTaskRecord(TaskRecordDTO.convertFromEntity(task)).setPath(getPath(bucketName, key));
     }
 
     @Override

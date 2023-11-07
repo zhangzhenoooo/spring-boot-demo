@@ -1,6 +1,6 @@
 CREATE TABLE sys_upload_task
 (
-    id              bigint PRIMARY KEY NOT NULL COMMENT '主键ID',
+    id              varchar(32)    PRIMARY KEY NOT NULL COMMENT '主键ID',
     upload_id       varchar(255)       NOT NULL COMMENT '分片上传的uploadId',
     file_identifier varchar(500)       NOT NULL COMMENT '文件唯一标识（md5）',
     file_name       varchar(500)       NOT NULL COMMENT '文件名',
