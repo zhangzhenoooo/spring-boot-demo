@@ -50,6 +50,11 @@
             <groupId>com.alibaba.spring.boot</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
         </dependency>
+        <!-- SpringBoot 拦截器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!--end dubbo -->
    
     </dependencies>
