@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cloud-alibaba-product
+    name: cloud-alibaba-order
   cloud:
     nacos:
       discovery:
