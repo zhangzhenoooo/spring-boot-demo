@@ -1,0 +1,121 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /springbootdemo
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 2048
+
+spring:
+  application:
+    name: springbootdemo
+#  http:
+#    log-request-details: true
+  dubbo:
+    registry: zookeeper://192.168.1.250:2181
+    server: true
+    protocol:
+      port: 28888
+  # 数据库
+  datasource:
+    name: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      operation:
+        url: jdbc:oracle:thin:@192.168.2.20:1521/orcl
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        username: OPERATION_CENTER
+        password: OPERATION_CENTER
+        max-open-prepared-statements: 100
+        filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
+      core:
+        url: jdbc:oracle:thin:@192.168.2.20:1521/orcl
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        username: OPERATION_CENTER
+        password: OPERATION_CENTER
+        filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
+      demo:
+        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/demoDatabase
+        driver-class-name: org.h2.Driver
+        username: sa
+        password: 
+#  h2:
+#    console:
+#      # h2嵌入式数据库控制台，可通过浏览器访问
+#      path: /h2-console
+#      enabled: true
+
+
+  thymeleaf:
+    # 开启视图解析
+    enabled: true
+    # 编码格式
+    encoding: UTF-8
+    # 前缀配置
+    prefix: classpath*:/templates/
+    # 后缀配置
+    suffix: .html
+    # 是否使用页面缓存 开发方便不启用
+    cache: false
+    # 格式
+    mode: HTML5
+    # 配置类型
+    servlet:
+      content-type: text/html
+
+
+# mybatis-plus的配置
+mybatis-plus:
+  global-config:
+    banner: off # 关闭mybatisplus启动图标 
+    id-type: 0
+    field-strategy: 2
+    capital-mode: true
+    refresh-mapper: true
+  configuration:
+    # 输出到控制台
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 输出到日志文件中 配置slf4j或者log4j2都行org.apache.ibatis.logging.log4j2.Log4j2Impl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    # 禁止日志输出
+    #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    jdbc-type-for-null: 'null'
+  mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
+
+es:
+  client:
+    client-01:
+      hosts: 192.168.2.5:9200
+      username: bs
+      password: bs&*()
+    client-02:
+      hosts: 192.168.2.6:9200
+      username: bs
+      password: bs&*()
+    client-03:
+      hosts: 192.168.2.7:9200
+      username: bs
+      password: bs&*()
+    client-04:
+      hosts: 192.168.2.14:9200
+      username: bs
+      password: bs&*()
+
+#文件存储
+nontax3:
+  vfs:
+    baseFolder:
+    mode: minio
+    minio:
+      bucketName: pjcloud-10007
+      region: http://192.168.1.225:9000
+      secretKey: lzXzieXS1N2G8Q2v25XRQ9pVor8cK8mgZUurzWWi
+      accessKey: sNTbSRegtbpwFKs4QPxI
+
+
+#是否激活 swagger true or false
+swagger:
+  enable: true
+  #文档版本
+  version: V2.0
