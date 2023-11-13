@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: cloud-alibaba-product
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.225:8848
+        # 集群
+#        cluster-name: test
+#        namespace: configManager
+      config:
+        server-addr: 192.168.1.225:8848
+        # 指定分组 根据项目分组
+        group: provider
+        # 指定文件名，没有则默认${spring.application.name}
+        # 指定读取配置中心文件后缀
+        file-extension: yaml
+  profiles:
+    active: dev
+    
+ 
+
+
+
+ 
