@@ -1,0 +1,12 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /cloud-alibaba-product
+
+spring:
+  datasource:
+    url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/cloud_alibaba
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+      
