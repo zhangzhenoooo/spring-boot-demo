@@ -1,4 +1,4 @@
+#new
 spring:
-  config:
-    activate:
-      on-profile: home
+  profiles:
+    active: home

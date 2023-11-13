@@ -10,8 +10,8 @@ server:
 spring:
   application:
     name: springbootdemo
-  http:
-    log-request-details: true
+#  http:
+#    log-request-details: true
   dubbo:
     registry: zookeeper://192.168.1.250:2181
     server: true

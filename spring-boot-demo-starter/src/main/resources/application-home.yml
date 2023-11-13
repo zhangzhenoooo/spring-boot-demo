@@ -10,8 +10,6 @@ server:
 spring:
   application:
     name: springbootdemo
-  http:
-    log-request-details: true
   dubbo:
     registry: zookeeper://192.168.1.250:2181
     server: true
@@ -23,20 +21,17 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       operation:
-        url: jdbc:oracle:thin:@192.168.2.20:1521/orcl
-        driver-class-name: oracle.jdbc.driver.OracleDriver
-        username: OPERATION_CENTER
-        password: OPERATION_CENTER
-        max-open-prepared-statements: 100
-        filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
+        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/operation
+        driver-class-name: org.h2.Driver
+        username: sa
+        password:
       core:
-        url: jdbc:oracle:thin:@192.168.2.20:1521/orcl
-        driver-class-name: oracle.jdbc.driver.OracleDriver
-        username: OPERATION_CENTER
-        password: OPERATION_CENTER
-        filters: stat,slf4j #监控统计的stat,以及防sql注入的wall
+        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/core
+        driver-class-name: org.h2.Driver
+        username: sa
+        password:
       demo:
-        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/demoDatabase
+        url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/demo
         driver-class-name: org.h2.Driver
         username: sa
         password: 

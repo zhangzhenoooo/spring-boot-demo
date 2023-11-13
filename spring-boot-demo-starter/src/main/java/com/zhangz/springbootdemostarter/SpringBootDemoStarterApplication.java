@@ -1,7 +1,7 @@
 package com.zhangz.springbootdemostarter;
 
-import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
-import org.mybatis.spring.annotation.MapperScan;
+ import com.alibaba.dubbo.config.spring.context.annotation.EnableDubboConfig;
+ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 /**
  * 开启dubbo配置
  */
-@EnableDubboConfiguration
+@EnableDubboConfig
 /**
  * 指定mapper扫描包
  */
