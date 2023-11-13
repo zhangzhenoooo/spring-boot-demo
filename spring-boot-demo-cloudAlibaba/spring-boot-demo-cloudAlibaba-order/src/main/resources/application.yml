@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/cloud_alibaba
+    url: jdbc:h2:D:/Users/100451/IdeaProjects/spring-boot-demo/cloud_alibaba_order
     driver-class-name: org.h2.Driver
     username: sa
     password:

@@ -26,6 +26,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     
     <dependencyManagement>
         <dependencies>
+            
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
