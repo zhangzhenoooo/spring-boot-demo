@@ -4,22 +4,25 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.139.1:8848
+        server-addr: 192.168.1.225:8848
         # 集群
-#        cluster-name: test
-#        namespace: configManager
+      #        cluster-name: test
+      #        namespace: configManager
       config:
         server-addr: 192.168.1.225:8848
         # 指定分组 根据项目分组
-        group: provider
+        #        group: provider
         # 指定文件名，没有则默认${spring.application.name}
         # 指定读取配置中心文件后缀
         file-extension: yaml
+        shared-dataids: all-server.yaml # 配置要引入的配置 新吧版本已弃用
+        refreshable-dataids: all-server.yaml # 配置需要动态刷新的配置
+
   profiles:
     active: dev
     
- 
 
 
 
- 
+
+
