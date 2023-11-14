@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Data
 @Builder
@@ -20,4 +21,5 @@ public class Order implements Serializable {
     private String pname;// 商品名称
     private Double pprice;// 商品单价
     private Integer number;// 购买数量
+    private Set<Object> products;
 }

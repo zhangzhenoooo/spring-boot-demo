@@ -16,12 +16,10 @@ spring:
         # 指定读取配置中心文件后缀
         file-extension: yaml
         shared-dataids: all-server.yaml # 配置要引入的配置
-        refreshable-dataids: all-server.yaml # 配置需要动态刷新的配置
+        refreshable-dataids: all-server.yaml # 配置需要动态刷新的配
   profiles:
     active: dev
-    
- 
-
-
-
- 
+  
+swagger:
+  enable: true
+  version: 1.0.0

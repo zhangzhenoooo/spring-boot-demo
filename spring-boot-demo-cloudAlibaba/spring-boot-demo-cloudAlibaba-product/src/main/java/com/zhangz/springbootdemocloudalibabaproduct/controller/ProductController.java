@@ -5,9 +5,7 @@ import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
 import com.zhangz.springbootdemocloudalibabaproduct.service.ProductService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,7 +20,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/getProductByName")
-    public Object getProductByName(String productName) {
+    @ResponseBody
+    public String getProductByName(@RequestParam("productName") String productName) {
         log.info("getProductByName params  productName:{}", productName);
         List<Product> productList = productService.getProductByName(productName);
         return JSON.toJSONString(productList);

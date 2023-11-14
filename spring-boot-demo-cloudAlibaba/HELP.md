@@ -338,3 +338,56 @@ dubbo:
 @DubboReference
 private TestService testService;
 ```
+
+## Fegin 
+### 简介  
+>Feign是Spring Cloud提供的一个声明式的伪Http客户端， 它使得调用远程服务就像调用本地服务
+一样简单， 只需要创建一个接口并添加一个注解即可。
+Nacos很好的兼容了Feign， Feign默认集成了 Ribbon， 所以在Nacos下使用Fegin默认就实现了负
+载均衡的效果。
+
+### 引入maven依赖
+```xml
+<!--fegin组件-->
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+<artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+### 开启feign 
+```java
+//启动类增加注解
+@EnableFeignClients 
+```
+### demo 实例
+1.编写接口
+```java
+   @GetMapping("/getProductByName")
+    @ResponseBody
+    public String getProductByName(@RequestParam("productName") String productName) {
+        log.info("getProductByName params  productName:{}", productName);
+        List<Product> productList = productService.getProductByName(productName);
+        return JSON.toJSONString(productList);
+    }
+```
+2.在调用的服务增加feign接口
+```java
+@RefreshScope
+@FeignClient(name = "cloud-alibaba-product",url = "${cloudAlibaba.service.product.address}")  
+public interface FeignProductService {
+    // 指定调用提供者的哪个方法
+    // @FeignClient+@GetMapping 就是一个完整的请求路径 http://localhost:8888/cloud-alibaba-product/getProductByName
+    @GetMapping("/product/getProductByName")
+    String getProductByName(@RequestParam("productName") String productName);
+}
+```
+3. 增加配置文件
+这里我增加到了 all-server.yaml 文件中，每个服务的地址应该都是一样的，可以共用
+```yaml
+cloudAlibaba:
+  allServer:
+    publicConfig: 12423423234234
+  service:
+    product: 
+      address: localhost:8888/cloud-alibaba-product
+```
