@@ -21,7 +21,9 @@ spring:
   profiles:
     active: dev
     
-
+swagger:
+  enable: true
+  version: 1.0.0
 
 
 

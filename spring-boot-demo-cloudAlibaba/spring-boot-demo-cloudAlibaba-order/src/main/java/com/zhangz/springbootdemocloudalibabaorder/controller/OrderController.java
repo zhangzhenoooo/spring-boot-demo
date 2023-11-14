@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Order;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
 import com.zhangz.springbootdemocloudalibabaorder.service.OrderService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@Api(tags = "订单服务")
 @RequestMapping("/order")
 public class OrderController {
 
