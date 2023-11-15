@@ -17,4 +17,11 @@ public class ProductServiceImpl implements ProductService {
         products.add(Product.builder().pname(productName).build());
         return products;
     }
+
+    @Override
+    public Product getProductById(String pid) {
+        log.info("getProductById pid:{}", pid);
+        
+        return Product.builder().pid(pid).pname(pid + System.currentTimeMillis()).build();
+    }
 }

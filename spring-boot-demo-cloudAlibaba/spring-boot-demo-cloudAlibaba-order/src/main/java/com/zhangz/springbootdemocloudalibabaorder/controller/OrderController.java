@@ -1,14 +1,14 @@
 package com.zhangz.springbootdemocloudalibabaorder.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.zhangz.springbootdemocloudalibabacommon.dto.OrderDTO;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Order;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
+import com.zhangz.springbootdemocloudalibabacommon.vo.Result;
 import com.zhangz.springbootdemocloudalibabaorder.service.OrderService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,9 +23,16 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/getOrderById")
-    public Object getOrderById(String orderId) {
+    public String getOrderById(String orderId) {
         log.info("getOrderById params  orderId:{}", orderId);
         List<Order> productList = orderService.getOrderById(orderId);
         return JSON.toJSONString(productList);
+    }
+
+    @PostMapping("/createOrder")
+    public Result createOrder(@RequestParam("pid") String pid) throws Exception {
+        log.info("getOrderById params pid:{}", pid);
+        Order order = orderService.createOrder(pid);
+        return Result.success(JSON.toJSONString(order));
     }
 }

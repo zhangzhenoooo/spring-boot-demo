@@ -1,0 +1,11 @@
+#文件备份 暂时不启用nacos的持久化，不方便自己测试
+cloudAlibaba:
+  allServer:
+    publicConfig: 12423423234234
+  service:
+    # 商品服务
+    product:
+      address: localhost:8888/cloud-alibaba-product
+      # 订单服务
+    order:
+      address: localhost:9999/cloud-alibaba-order

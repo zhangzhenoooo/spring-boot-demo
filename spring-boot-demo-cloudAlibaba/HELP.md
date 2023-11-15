@@ -339,41 +339,49 @@ dubbo:
 private TestService testService;
 ```
 
-## Fegin 
-### 简介  
->Feign是Spring Cloud提供的一个声明式的伪Http客户端， 它使得调用远程服务就像调用本地服务
-一样简单， 只需要创建一个接口并添加一个注解即可。
-Nacos很好的兼容了Feign， Feign默认集成了 Ribbon， 所以在Nacos下使用Fegin默认就实现了负
-载均衡的效果。
+## Fegin 远程调用
+
+### 简介
+
+> Feign是Spring Cloud提供的一个声明式的伪Http客户端， 它使得调用远程服务就像调用本地服务 一样简单， 只需要创建一个接口并添加一个注解即可。 Nacos很好的兼容了Feign， Feign默认集成了 Ribbon， 所以在Nacos下使用Fegin默认就实现了负 载均衡的效果。
 
 ### 引入maven依赖
+
 ```xml
 <!--fegin组件-->
 <dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-starter-openfeign</artifactId>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
 </dependency>
 ```
-### 开启feign 
+
+### 开启feign
+
 ```java
 //启动类增加注解
 @EnableFeignClients 
 ```
+
 ### demo 实例
+
 1.编写接口
+
 ```java
    @GetMapping("/getProductByName")
-    @ResponseBody
-    public String getProductByName(@RequestParam("productName") String productName) {
-        log.info("getProductByName params  productName:{}", productName);
-        List<Product> productList = productService.getProductByName(productName);
+@ResponseBody
+public String getProductByName(@RequestParam("productName") String productName){
+        log.info("getProductByName params  productName:{}",productName);
+        List<Product> productList=productService.getProductByName(productName);
         return JSON.toJSONString(productList);
-    }
+        }
 ```
+
 2.在调用的服务增加feign接口
+
 ```java
+
 @RefreshScope
-@FeignClient(name = "cloud-alibaba-product",url = "${cloudAlibaba.service.product.address}")  
+@FeignClient(name = "cloud-alibaba-product", url = "${cloudAlibaba.service.product.address}")
 public interface FeignProductService {
     // 指定调用提供者的哪个方法
     // @FeignClient+@GetMapping 就是一个完整的请求路径 http://localhost:8888/cloud-alibaba-product/getProductByName
@@ -381,13 +389,138 @@ public interface FeignProductService {
     String getProductByName(@RequestParam("productName") String productName);
 }
 ```
-3. 增加配置文件
-这里我增加到了 all-server.yaml 文件中，每个服务的地址应该都是一样的，可以共用
+
+3. 增加配置文件 这里我增加到了 all-server.yaml 文件中，每个服务的地址应该都是一样的，可以共用
+
 ```yaml
 cloudAlibaba:
   allServer:
     publicConfig: 12423423234234
   service:
-    product: 
+    product:
       address: localhost:8888/cloud-alibaba-product
+```
+
+## Sentinel--服务容错
+
+### 常见的容错策略
+
+1. 隔离
+2. 超时
+3. 限流
+4. 熔断
+5. 降级
+
+### 常见的容错组件
+
+1. Hystrix
+2. Resilience4J
+3. Sentnel
+
+### 集成sentinel
+
+1. 在maven 加入依赖
+
+```xml
+
+<!--熔断 sentinel -->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+    <version>2.2.4.RELEASE</version>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-actuator</artifactId>
+<version>2.2.5.RELEASE</version>
+</dependency>
+
+```
+
+2. 修改配置文件
+
+```yaml
+spring:
+  application:
+    name: cloud-alibaba-order
+  cloud:
+    sentinel:
+      transport:
+        port: 8179 # 同控制台交互的地址
+        dashboard: 127.0.0.1:8080 # 控制台地址
+      eager: true
+```
+
+3. 启动 sentinel 客户端
+
+> 项目地址： sentinel-dashboard-zk
+> 访问地址： http://localhost:8080/#/dashboard/degrade/sentinel-dashboard  sentinel\sentinel
+
+4. 模拟限流
+
+4.1 登录到sentinel控制台
+
+4.2 在簇点链路中选择需要限流的接口
+
+4.3 点击流控 ，增加限流规则
+
+4.4 可通过 jmeter 模拟并发请求，同时查看后台访问日志 (可限制并发数为1 ，这样能够明显看到日志减少)
+也可以同时swagger请求同一接口，返回 （Blocked by Sentinel (flow limiting)）
+
+## feign 整合 sentinel
+1. 增加依赖
+```xml
+<!--sentinel客户端-->
+<dependency>
+<groupId>com.alibaba.cloud</groupId>
+<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+</dependency>
+```
+2. 在配置文件中开启feign对sentinel的支持
+```yaml
+feign:
+  sentinel:
+    enabled: true
+```
+3. 创建feign service接口的容错实现类
+```java
+/**
+ * @author 100451
+ *  熔断接口实现 
+ *  1.容错类 必须实现需要容错的所有接口 ， 并且实现容错方案
+ */
+@Component
+@Slf4j
+public class FeignProductServiceFallBack implements FeignProductService {
+    @Override
+    public String getProductByName(String productName) {
+        log.warn("proudct server method getProductByName fallback ,params proudctName :{} ",productName);
+        Product fallback = Product.builder().pid("-1").pname("fallback").build();
+        return JSON.toJSONString(fallback);
+    }
+
+    @Override
+    public String getProductById(String pid) {
+        log.warn("proudct server method getProductById fallback ,params pid :{} ",pid);
+        Product fallback = Product.builder().pid("-1").pname("fallback").build();
+        return JSON.toJSONString(fallback);
+    }
+}
+```
+4. feign 调用service接口上指定容错类
+```java
+/**
+ *  fallback 指定容错类
+ */
+@RefreshScope
+@FeignClient(name = "cloud-alibaba-product", url = "${cloudAlibaba.service.product.address}", fallback = FeignProductServiceFallBack.class)
+public interface FeignProductService {
+    // 指定调用提供者的哪个方法
+    // @FeignClient+@GetMapping 就是一个完整的请求路径 http://localhost:8888/cloud-alibaba-product/getProductByName
+    @GetMapping("/product/getProductByName")
+    String getProductByName(@RequestParam("productName") String productName);
+
+    @GetMapping("/product/getProductById")
+    String getProductById(@RequestParam("pid") String pid);
+}
 ```
