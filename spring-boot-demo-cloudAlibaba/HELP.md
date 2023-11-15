@@ -458,31 +458,34 @@ spring:
 
 4. 模拟限流
 
-4.1 登录到sentinel控制台
-
-4.2 在簇点链路中选择需要限流的接口
-
-4.3 点击流控 ，增加限流规则
-
+> 4.1 登录到sentinel控制台  
+4.2 在簇点链路中选择需要限流的接口  
+4.3 点击流控 ，增加限流规则  
 4.4 可通过 jmeter 模拟并发请求，同时查看后台访问日志 (可限制并发数为1 ，这样能够明显看到日志减少)
 也可以同时swagger请求同一接口，返回 （Blocked by Sentinel (flow limiting)）
 
 ## feign 整合 sentinel
+
 1. 增加依赖
+
 ```xml
 <!--sentinel客户端-->
 <dependency>
-<groupId>com.alibaba.cloud</groupId>
-<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 </dependency>
 ```
+
 2. 在配置文件中开启feign对sentinel的支持
+
 ```yaml
 feign:
   sentinel:
     enabled: true
 ```
+
 3. 创建feign service接口的容错实现类
+
 ```java
 /**
  * @author 100451
@@ -494,20 +497,22 @@ feign:
 public class FeignProductServiceFallBack implements FeignProductService {
     @Override
     public String getProductByName(String productName) {
-        log.warn("proudct server method getProductByName fallback ,params proudctName :{} ",productName);
+        log.warn("proudct server method getProductByName fallback ,params proudctName :{} ", productName);
         Product fallback = Product.builder().pid("-1").pname("fallback").build();
         return JSON.toJSONString(fallback);
     }
 
     @Override
     public String getProductById(String pid) {
-        log.warn("proudct server method getProductById fallback ,params pid :{} ",pid);
+        log.warn("proudct server method getProductById fallback ,params pid :{} ", pid);
         Product fallback = Product.builder().pid("-1").pname("fallback").build();
         return JSON.toJSONString(fallback);
     }
 }
 ```
+
 4. feign 调用service接口上指定容错类
+
 ```java
 /**
  *  fallback 指定容错类
@@ -523,4 +528,140 @@ public interface FeignProductService {
     @GetMapping("/product/getProductById")
     String getProductById(@RequestParam("pid") String pid);
 }
+```
+
+## gateway
+
+1. 引入maven依赖
+
+* 需注意删除spring-boot-start-web相关依赖
+
+```xml
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+```
+
+* 引入nacos 配置中心
+
+```xml
+ <!-- 注册中心 -->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
+
+        <!-- 配置中心 -->
+<dependency>
+<groupId>com.alibaba.cloud</groupId>
+<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+</dependency>
+
+```
+
+2. 启动类增加 注解
+
+```java
+@EnableDiscoveryClient
+```
+
+3. 编写配置文件
+
+```yaml
+spring:
+  application:
+    name: cloud-alibaba-gateway
+  cloud:
+    gateway:
+      filter:
+        remove-hop-by-hop:
+          headers:
+            # 以下是去掉网关默认去掉的请求响应头
+            - trailer
+            - te
+            - keep-alive
+            - transfer-encoding
+            - upgrade
+            - proxy-authenticate
+            - connection
+            - proxy-authorization
+            - x-application-context
+            # 以下是去掉服务层面定义的跨域
+            - access-control-allow-credentials
+            - access-control-allow-headers
+            - access-control-allow-methods
+            - access-control-allow-origin
+            - access-control-max-age
+            - vary
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            maxAge: 3628800
+      discovery:
+        locator:
+          enabled: true # 让gateway 可以发现nacos中的微服务
+      routes:
+        - id: test
+          uri: https://www.baidu.com
+          order: 1
+          predicates:
+            - Path=/test/**
+          filters:
+            - StripPrefix=1
+
+        - id: cloud_product
+          # 要转发到的地址 lb是指从nacos中安装名称获取微服务并且遵循负载均衡
+          uri: lb://cloud-alibaba-product
+          order: 1
+          predicates:
+            # 当请求路径满足断言时才进行转发 
+            - Path=/product/**
+          filters:
+            # 转发之前去掉一层路径
+            - StripPrefix=1
+    nacos:
+      discovery:
+        server-addr: 192.168.1.225:8848
+        # 集群
+      #        cluster-name: test
+      #        namespace: configManager
+      config:
+        server-addr: 192.168.1.225:8848
+        # 指定分组 根据项目分组
+        #        group: provider
+        # 指定文件名，没有则默认${spring.application.name}
+        # 指定读取配置中心文件后缀
+        file-extension: yaml
+        shared-dataids: all-server.yaml # 配置要引入的配置
+        refreshable-dataids: all-server.yaml # 配置需要动态刷新的配置
+
+  profiles:
+    active: dev
+
+#暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+```
+> - StripPrefix=1  
+    例如：（http://127.0.0.1:8181/product/list -> http://192.168.1.100:8086/list），
+
+4. 测试调用
+```text
+http://localhost:7777/test/
+ 
+http://localhost:7777/product/cloud-alibaba-product/product/getProductById?pid=123123
 ```
