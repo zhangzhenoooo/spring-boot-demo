@@ -7,7 +7,6 @@
         <groupId>com.zhangz</groupId>
         <artifactId>spring-boot-demo-cloudAlibaba</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-
     </parent>
 
     <artifactId>spring-boot-demo-cloudAlibaba-order</artifactId>
