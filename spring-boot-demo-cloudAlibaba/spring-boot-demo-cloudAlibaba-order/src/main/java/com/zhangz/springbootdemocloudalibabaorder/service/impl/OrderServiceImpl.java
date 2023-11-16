@@ -7,9 +7,12 @@ import com.alibaba.nacos.common.utils.UuidUtils;
 import com.zhangz.springbootdemocloudalibabacommon.dto.OrderDTO;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Order;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
+import com.zhangz.springbootdemocloudalibabaorder.config.MQConfig;
 import com.zhangz.springbootdemocloudalibabaorder.service.FeignProductService;
 import com.zhangz.springbootdemocloudalibabaorder.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,10 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Resource
     private FeignProductService feignProductService;
-
+    
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    
     @Override
     public List<Order> getOrderById(String orderId) {
         ArrayList<Order> orders = new ArrayList<>();
@@ -54,7 +60,8 @@ public class OrderServiceImpl implements OrderService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        // 订单生成以后 发送消息通知用户 已下单
+        rabbitTemplate.convertAndSend(MQConfig.ORDER_EXCHANGE, MQConfig.ORDER_RUTEKEY,"订单【"+orderId+"】已下单！");
         return build;
     }
 }

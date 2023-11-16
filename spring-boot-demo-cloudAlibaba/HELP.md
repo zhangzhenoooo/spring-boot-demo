@@ -949,3 +949,71 @@ openzipkin/zipkin:2.21.7```
 ```shell
 GET zipkin-span-2023-11-16/_search
 ```
+
+## 消息驱动 - rabbitMQ
+
+参考文档：
+
+* [秃秃头头:SpringCloud项目整合RabbitMQ](https://blog.csdn.net/weixin_43028393/article/details/129818186)
+* [codeLearn:Spring Cloud 集成 RabbitMQ ](https://www.cnblogs.com/codeLearn/p/16964708.html)
+
+1. 应用场景
+
+* 异步接口
+* 流量消峰
+
+2. 引入maven依赖
+
+```xml
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+<artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
+
+```
+
+3. 增加配置信息
+
+```yaml
+spring:
+  rabbitmq:
+    host: 192.168.1.166
+    port: 5672
+    username: guest
+    password: guest
+```
+
+4. 发送消息
+
+```java
+
+@Autowired
+private RabbitTemplate rabbitTemplate;
+
+
+        // 订单生成以后 发送消息通知用户 已下单
+        rabbitTemplate.convertAndSend(MQConfig.ORDER_RUTEKEY,"订单【"+orderId+"】已下单！");
+
+```
+5. 接收消息
+```java
+@Slf4j
+@Component
+public class MqReceiveService {
+
+    /**
+     * 接收订单下单后 发送用户通知的消息
+     * 当队列不存在时自动创建并且自动绑定exchange
+     * @param message 消息体
+     */
+    @RabbitListener(bindings = {@QueueBinding(value = @Queue(MQConfig.ORDER_QUEUE), exchange = @Exchange(MQConfig.ORDER_EXCHANGE), key = MQConfig.ORDER_RUTEKEY)})
+    public void orderNotion(String message) {
+        log.info("接收到消息体|{}", message);
+    }
+}
+```
