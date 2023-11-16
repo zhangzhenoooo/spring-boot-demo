@@ -22,6 +22,9 @@ spring:
       transport:
         port: 8719
         dashboard: 127.0.0.1:8080
+          #sentinel 日志 存储位置
+      log:
+        dir: D:\Users\100451\IdeaProjects\spring-boot-demo\spring-boot-demo-cloudAlibaba\spring-boot-demo-cloudAlibaba-product\src\main\resources\sentinel\log
 
   profiles:
     active: dev

@@ -813,3 +813,5 @@ public class GatewayConfiguration {
 5.3 测试限流效果  
 快速调用 http://localhost:7777/cloud-alibaba-product/product/getProductById?pid=123123
 返回信息 {"code":0,"message":"接口被限流了"}
+
+## 链路追踪 Sleuth +Zinkin
