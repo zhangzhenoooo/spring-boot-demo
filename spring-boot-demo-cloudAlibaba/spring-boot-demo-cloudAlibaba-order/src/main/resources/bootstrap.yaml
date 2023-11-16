@@ -58,3 +58,8 @@ management:
 swagger:
   enable: true
   version: 1.0.0
+
+tencent:
+  cloud:
+    secretId: AKIDtd9RVMyBe3GLDsMdkeMpQnxta4KNCm7S
+    secretKey: A5lETaT9aonY4MQHAqKhsqb8TggV7E9s

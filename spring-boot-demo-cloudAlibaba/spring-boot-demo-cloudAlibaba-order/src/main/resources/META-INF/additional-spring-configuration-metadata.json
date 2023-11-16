@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "tencent.cloud.secretId",
+      "type": "java.lang.String",
+      "description": "Description for tencent.cloud.secretId."
+    },
+    {
+      "name": "tencent.cloud.secretKey",
+      "type": "java.lang.String",
+      "description": "Description for tencent.cloud.secretKey."
+    }
+  ] }
