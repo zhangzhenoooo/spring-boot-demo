@@ -815,3 +815,137 @@ public class GatewayConfiguration {
 返回信息 {"code":0,"message":"接口被限流了"}
 
 ## 链路追踪 Sleuth +Zinkin
+
+参考文档：
+
+* [spring cloud 调用链追踪：集成 Sleuth 和 Zipkin，实现链路打标](https://blog.csdn.net/sumguo10qq/article/details/129207291)
+
+### 集成 sleuth
+
+1. 引入maven依赖
+
+```xml
+  <!--链路追踪 Sleuth-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+```
+
+2. 增加配置文件
+
+```yaml
+spring:
+  # 链路监控
+  sleuth:
+    log:
+      slf4j:
+        enabled: true
+    sampler:
+      # 采样率的概率， 100%采样
+      probability: 1.0
+      # 每秒采样数字最高为1000
+      rate: 1000
+
+```
+
+3. 启动项目 调用请求
+
+* 查看控制台日志
+
+> 2023-11-16 11:20:51.183  INFO [cloud-alibaba-order,b6e2419f74aaa0e3,b6e2419f74aaa0e3,true] 40236 --- [nio-9999-exec-1] c.z.s.controller.OrderController         : getOrderById params  orderId:u5etr  
+> 2023-11-16 11:20:51.183  INFO [serverId,traceId,spanId,true]
+
+## 整合zipkin
+
+### zipkin 服务端安装启动
+
+1.下载zipkin-server
+> 下载地址  
+https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&c=exec&v=2.23.9
+
+2.命令行启动 zipkin-server  
+zipkin-server 内置了rabbitMQ 默认的RavvitMQ 的账号密码都是guset/guest 队列是 zipkin，  
+可通过下列参数 修改 :
+![img.png](img.png)
+
+```shell
+# 连接 RabbitmQ 
+java -jar zipkin-server-2.23.9-exec.jar --zipkin.collector.rabbitmq.addresses=localhost:5672
+# 单独启动
+java -jar zipkin-server-2.23.9-exec.jar
+```
+
+3. 浏览器访问控制台
+
+```text
+http://localhost:9411
+```
+
+### zipkin 客户端集成
+
+1.引入maven依赖
+
+```xml
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+</dependency>
+```
+
+2. 增加配置
+
+```yaml
+spring:
+  zipkin:
+    base-url: http://localhost:9411/ #zipkin server的请求地址
+    discovery-client-enabled: false # 让nacos把她当作一个url而不是服务名
+```
+
+3. 重启项目 调用接口 查看控制台
+   ![img_1.png](img_1.png)
+
+4. zipkin 数据持久化  
+   参考文档：
+    * [JavaEdge Docker搭建Zipkin，实现数据持久化到MySQL、ES](https://zhuanlan.zhihu.com/p/652677976)
+   > zipkin-server 数据默认保存在内存中的，最大存储为50000个span.  
+   zipkin 天然支持cassandra elasticsearch 以及 MySQL三种持久化方式。  
+   [zipkin 配置](https://github.com/openzipkin/zipkin/blob/master/zipkin-server/src/main/resources/zipkin-server-shared.yml)  
+   [持久化版本对照](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin%25EF%25BC%258C%25E5%258F%25AF%25E6%259F%25A5%25E7%259C%258B%25EF%25BC%259A)
+
+4.1 mysql 持久化   
+4.1.1 新建数据 zipkin 并且初始化建表脚本
+
+[MySQL建表语句参考](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin/blob/master/zipkin-storage/mysql-v1/src/main/resources/mysql.sql)
+
+4.1.2 修改启动命令 增加MySQL 信息
+
+```shell
+docker run \
+--name zipkin-server -d \
+--restart=always \
+-p 9411:9411 \
+-e MYSQL_USER=root \
+-e MYSQL_PASS=lhzlx \
+-e MYSQL_HOST=111.229.160.175 \
+-e STORAGE_TYPE=mysql \
+-e MYSQL_DB=zipkin \
+-e MYSQL_TCP_PORT=3316 \
+openzipkin/zipkin:2.21.7```
+
+4.1.3 启动项目并且调用后查看数据库进行验证    
+
+4.2 es 持久化
+
+4.2.1 无需建表 只需启动时指定es配置
+
+```shell
+  java -DSTORAGE_TYPE=elasticsearch -DES_HOSTS=http://192.168.2.14:9200 -jar  zipkin-server-2.23.9-exec.jar > publish.log &
+```
+
+4.2.2 重启zipkin-server 后调用服务 查询es
+
+```shell
+GET zipkin-span-2023-11-16/_search
+```
