@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: cloud-alibaba-product
   cloud:
@@ -22,7 +24,7 @@ spring:
       transport:
         port: 8719
         dashboard: 127.0.0.1:8080
-          #sentinel 日志 存储位置
+        #sentinel 日志 存储位置
       log:
         dir: D:\Users\100451\IdeaProjects\spring-boot-demo\spring-boot-demo-cloudAlibaba\spring-boot-demo-cloudAlibaba-product\src\main\resources\sentinel\log
 
@@ -40,7 +42,17 @@ spring:
   zipkin:
     base-url: http://localhost:9411/ #zipkin server的请求地址
     discovery-client-enabled: false # 让nacos把她当作一个url而不是服务名
-    
+
+
+dubbo:
+  scan:
+    base-packages: com.zhangz
+  protocol:
+    name: dubbo # 协议
+    port: -1 #  -1 表示端口自增 从20880开始
+  registry:
+    address: spring-cloud://localhost # 注册中心
+
 swagger:
   enable: true
   version: 1.0.0

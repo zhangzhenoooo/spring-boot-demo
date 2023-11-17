@@ -54,7 +54,20 @@ management:
       exposure:
         include: '*'
 
-
+dubbo:
+  protocol:
+    port: -1
+    name: dubbo
+  registry:
+    address: spring-cloud://localhost #注册中心
+#  cloud:
+#    subscribed-services: *
+  consumer:
+    check: false
+  scan:
+    base-packages: com.zhangz
+      
+      
 swagger:
   enable: true
   version: 1.0.0

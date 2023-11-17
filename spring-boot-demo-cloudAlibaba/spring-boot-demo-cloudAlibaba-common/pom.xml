@@ -6,6 +6,7 @@
         <groupId>com.zhangz</groupId>
         <artifactId>spring-boot-demo-cloudAlibaba</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>spring-boot-demo-cloudAlibaba-common</artifactId>

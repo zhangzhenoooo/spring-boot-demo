@@ -18,19 +18,7 @@ import java.util.Map;
 @Slf4j
 public class AliSMSUtils {
 
-    /**
-     * 
-     * @return
-     * @throws Exception
-     */
-    public static Client createClient() throws Exception {
-        // 不指定参数
-        Config config = new Config();
-        // 签名可以设置系统变量的方式进行保密  System.getEvn("ALI_SMS_ACCESS_KEY_ID") System.getEvn("ALI_SMS_ACCESS_KEY_SECRET")
-        config.accessKeyId = "LTAI5t6BN5L2WuhtnFQmnzN5";
-        config.accessKeySecret = "VgpeSWc9cd1wz2LNVB1G6g01pSTYJu";
-        return new Client(config);
-    }
+  
 
     /**
      *

@@ -1035,6 +1035,7 @@ public class MqReceiveService {
 > https://next.api.aliyun.com/api-tools/demo/Dysmsapi/db7e1211-14e0-4b7b-9011-037dfb85d42e
 
 测试用例： 创建订单 ： 创建订单后，通过MQ异步发送下单成功通知，通知方式短信（阿里）
+
 ## 分布式事务 - seata
 
 1. 分布式事务解决方案
@@ -1108,3 +1109,83 @@ Seata实现2PC与传统2PC的差别：
 
 2.2 seata 的使用
 
+## rpc通信 Dubbo
+
+1. 引入maven依赖
+
+```xml
+     <!--dubbo-->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-dubbo</artifactId>
+    <version>2.2.7.RELEASE</version>
+</dependency>
+```
+
+2.修改 配置
+
+```yaml
+#provider
+dubbo:
+  scan:
+    base-packages: com.zhangz
+  protocol:
+    name: dubbo # 协议
+    port: -1 #  -1 表示端口自增 从20880开始
+  registry:
+    address: spring-cloud://localhost # 注册中心
+
+# customer
+dubbo:
+  protocol:
+    port: -1
+    name: dubbo
+  registry:
+    address: spring-cloud://localhost #注册中心
+  #  cloud:
+  #    subscribed-services: *
+  consumer:
+    check: false
+  scan:
+    base-packages: com.zhangz
+```
+
+3. 修改启动类
+
+```java
+@DubboComponentScan
+```
+
+4. 使用
+
+```java
+// 提供者
+
+@DubboService(interfaceClass = ProductRpcService.class)
+@Slf4j
+public class ProductRpcServiceImpl implements ProductRpcService {
+
+    @Resource
+    private ProductService productService;
+
+    @Override
+    public List<Product> getProductByName(String productName) {
+        log.info("进入 PRC 调用 getProductByName ");
+
+        return productService.getProductByName(productName);
+    }
+
+    @Override
+    public Product getProductById(String pid) {
+        log.info("进入 PRC 调用 getProductById ");
+
+        return productService.getProductById(pid);
+    }
+}
+```
+
+```java
+//消费者
+@DubboReference
+private ProductRpcService productRPCService;
+```

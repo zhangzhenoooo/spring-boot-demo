@@ -1,17 +1,15 @@
 package com.zhangz.springbootdemocloudalibabaorder.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson2.util.BeanUtils;
-import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.alibaba.nacos.common.utils.UuidUtils;
-import com.zhangz.springbootdemocloudalibabacommon.dto.OrderDTO;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Order;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
+import com.zhangz.springbootdemocloudalibabacommon.service.ProductRpcService;
 import com.zhangz.springbootdemocloudalibabaorder.config.MQConfig;
 import com.zhangz.springbootdemocloudalibabaorder.service.FeignProductService;
 import com.zhangz.springbootdemocloudalibabaorder.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +23,13 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Resource
     private FeignProductService feignProductService;
-    
+
+    @DubboReference
+    private ProductRpcService productRPCService;
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    
+
     @Override
     public List<Order> getOrderById(String orderId) {
         ArrayList<Order> orders = new ArrayList<>();
@@ -43,14 +44,17 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(String pid) throws Exception {
         String orderId = UuidUtils.generateUuid();
 
+        Product productById = productRPCService.getProductById(pid);
+        log.info("dubbo 查询商品服务返回商品信息|{}", productById);
+
         String productStr = feignProductService.getProductById(pid);
         log.info("查询商品服务返回商品信息|{}", productStr);
         Product product = JSON.parseObject(productStr, Product.class);
-        
-        if ("-1".equals(product.getPid())){
-           return   Order.builder().oid(orderId).pid("-1").pname("熔断啦").build();
+
+        if ("-1".equals(product.getPid())) {
+            return Order.builder().oid(orderId).pid("-1").pname("熔断啦").build();
         }
-        
+
         Order build = Order.builder().oid(orderId).pid(pid).pname(product.getPname()).build();
 
         log.info("生成订单信息|{}", JSON.toJSONString(build));
@@ -61,7 +65,8 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         // 订单生成以后 发送消息通知用户 已下单
-        rabbitTemplate.convertAndSend(MQConfig.ORDER_EXCHANGE, MQConfig.ORDER_RUTEKEY,"订单【"+orderId+"】已下单！");
+        rabbitTemplate.convertAndSend(MQConfig.ORDER_EXCHANGE, MQConfig.ORDER_RUTEKEY, "订单【" + orderId + "】已下单！");
         return build;
     }
+ 
 }
