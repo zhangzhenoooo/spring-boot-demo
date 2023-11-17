@@ -1030,8 +1030,11 @@ public class MqReceiveService {
 
 参考文档：
 > * https://blog.csdn.net/xiangyangsanren/article/details/134119525
->
 
+阿里云短信发送demo：
+> https://next.api.aliyun.com/api-tools/demo/Dysmsapi/db7e1211-14e0-4b7b-9011-037dfb85d42e
+
+测试用例： 创建订单 ： 创建订单后，通过MQ异步发送下单成功通知，通知方式短信（阿里）
 ## 分布式事务 - seata
 
 1. 分布式事务解决方案
@@ -1085,8 +1088,8 @@ public class MqReceiveService {
 * TC : Transaction Ccoordinator : 事务协调器，管理全局的分支事务的状态，用于全局性事务的提交 和回滚
 * TM:Transaction Managet: 事务管理器 用于开启，回滚，提交事务
 * RM: Resource manager 资源管理器，用于分支事务上的资源管理，向TC注册分支事务，商保分支事务的状态，接受TC的命令来提交或者回滚分支事务。
-![img_3.png](img_3.png)
-Seata的执行流程如下:
+  ![img_3.png](img_3.png)
+  Seata的执行流程如下:
 
 1. A服务的TM向TC申请开启一个全局事务，TC就会创建一个全局事务并返回一个唯一的XID
 2. A服务的RM向TC注册分支事务，并及其纳入XID对应全局事务的管辖
@@ -1102,6 +1105,6 @@ Seata实现2PC与传统2PC的差别：
 1. 架构层次方面，传统2PC方案的 RM 实际上是在数据库层，RM本质上就是数据库自身，通过XA协 议实现，而 Seata的RM是以jar包的形式作为中间件层部署在应用程序这一侧的。
 2. 两阶段提交方面，传统2PC无论第二阶段的决议是commit还是rollback，事务性资源的锁都要保 持到Phase2完成才释放。而Seata的做法是在Phase1 就将本地事务提交，这样就可以省去Phase2
    持锁的时间，整体提高效率
-   
+
 2.2 seata 的使用
 

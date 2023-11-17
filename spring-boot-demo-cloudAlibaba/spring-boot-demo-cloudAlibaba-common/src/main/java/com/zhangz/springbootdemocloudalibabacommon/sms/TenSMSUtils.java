@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TenSMSUtils {
 
-    public void sendSMS(TenSMSDTO tenSms) throws Exception {
+    public static void sendSMS(TenSMSDTO tenSms) throws Exception {
         try {
 
             Credential cred = new Credential(tenSms.getSecretId(), tenSms.getSecretKey());

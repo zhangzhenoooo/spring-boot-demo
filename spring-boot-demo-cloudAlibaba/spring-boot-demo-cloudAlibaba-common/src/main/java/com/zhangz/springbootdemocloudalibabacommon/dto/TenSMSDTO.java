@@ -13,5 +13,6 @@ public class TenSMSDTO implements Serializable {
     private String templateId;
     String[] templateParamSet = {};
     String[] phoneNumberSet;
+    private String sign;
     
 }
