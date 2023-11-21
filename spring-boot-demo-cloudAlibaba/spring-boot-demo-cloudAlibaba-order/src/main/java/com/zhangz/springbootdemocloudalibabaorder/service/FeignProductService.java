@@ -1,11 +1,13 @@
 package com.zhangz.springbootdemocloudalibabaorder.service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.zhangz.springbootdemocloudalibabaorder.service.impl.FeignProductServiceFallBack;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *  fallback 指定容错类
@@ -21,4 +23,14 @@ public interface FeignProductService {
 
     @GetMapping("/product/getProductById")
     String getProductById(@RequestParam("pid") String pid);
+
+    /**
+     *  扣减库存
+     * @param pid 商品ID
+     * @param num 扣减数量 
+     * @throws Exception
+     */
+    @GetMapping("/product/reduceInventory")
+
+    void reduceInventory(@RequestParam("pid") String pid, @RequestParam("num") int num);
 }

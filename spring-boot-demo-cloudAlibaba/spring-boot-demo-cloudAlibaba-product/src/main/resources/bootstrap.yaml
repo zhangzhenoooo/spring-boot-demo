@@ -42,7 +42,13 @@ spring:
   zipkin:
     base-url: http://localhost:9411/ #zipkin server的请求地址
     discovery-client-enabled: false # 让nacos把她当作一个url而不是服务名
-
+  datasource:
+    name: h2
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.188:3306/zz_test?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
 
 dubbo:
   scan:
@@ -60,3 +66,6 @@ swagger:
 feign:
   sentinel:
     enabled: true
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml

@@ -27,4 +27,9 @@ public class FeignProductServiceFallBack implements FeignProductService {
         Product fallback = Product.builder().pid("-1").pname("fallback").build();
         return JSON.toJSONString(fallback);
     }
+
+    @Override
+    public void reduceInventory(String pid, int num) {
+       log.error("spring-cloud-product系统异常，进入熔断");
+    }
 }

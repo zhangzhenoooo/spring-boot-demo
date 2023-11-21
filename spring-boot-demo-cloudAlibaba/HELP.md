@@ -1,15 +1,22 @@
-# spring boot 项目 集成 nacos 实现配置管理
+# spring cloud notes
 
-> 参考链接：  
-[1.spring 整合nacos](https://blog.csdn.net/weixin_44033066/article/details/129043571?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-129043571-blog-127871025.235^v38^pc_relevant_sort_base1&spm=1001.2101.3001.4242.1&utm_relevant_index=3)
+参考文档:
 
-## 1 nacos 安装 (linux)
+1. [Spring Cloud Alibaba笔记@java1234.com](https://pan.baidu.com/s/1AVBNuU5crOOn9QM_Zy-nDg?pwd=1234)
+
+## 1. 注册中心 配置中心 - cacos
+
+> 参考链接：\
+> [1.spring 整合nacos](https://blog.csdn.net/weixin_44033066/article/details/129043571?utm_medium=distribute.pc_relevant.none-task-blog-2\~default\~baidujs_baidulandingword\~default-0-129043571-blog-127871025.235^v38^pc_relevant_sort_base1\&spm=1001.2101.3001.4242.1\&utm_relevant_index=3)
+
+### 1.1 nacos 安装 (linux)
 
 安装位置 192.168.1.225 /opt/bssoft/nacos/nacos
-> 参考文档:  
-[Nacos安装配置详细流程](https://blog.csdn.net/qq_52830988/article/details/128319218)
 
-### 1.1 下载nacos
+> 参考文档:\
+> [Nacos安装配置详细流程](https://blog.csdn.net/qq_52830988/article/details/128319218)
+
+#### 1.1.1 下载nacos
 
 * 选择与springboot 和 cloud
   对应的nacos [版本对照](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
@@ -21,7 +28,7 @@
 wget https://github.com/alibaba/nacos/releases/download/1.4.1/nacos-server-1.4.1.tar.gz
 ```
 
-### 1.2 解压
+#### 1.1.2 解压
 
 进入压缩包所在的文件夹:
 
@@ -36,7 +43,7 @@ wget https://github.com/alibaba/nacos/releases/download/1.4.1/nacos-server-1.4.1
  unzip nacos-server-1.2.1.zip
 ```
 
-### 1.3 启动
+#### 1.1.3 启动
 
 进入 bin目录
 
@@ -45,13 +52,13 @@ wget https://github.com/alibaba/nacos/releases/download/1.4.1/nacos-server-1.4.1
 ./startup.sh -m standalone
 ```
 
-### 1.4 关闭
+#### 1.1.4 关闭
 
 ```shell
 ./shutdown.sh
 ```
 
-### 1.5 测试访问
+#### 1.1.5 测试访问
 
 默认用户名密码 nacos/nacos
 
@@ -59,9 +66,9 @@ wget https://github.com/alibaba/nacos/releases/download/1.4.1/nacos-server-1.4.1
 http://192.168.1.225:8848/nacos
 ```
 
-### 1.6 设置开机自启
+#### 1.1.6 设置开机自启
 
-#### 1.6.1 创建 nacos.service文件
+##### 1.1.6.1 创建 nacos.service文件
 
 ```shell
 vim /lib/systemd/system/nacos.service
@@ -83,7 +90,7 @@ WantedBy=multi-user.target
 
 ```
 
-#### 1.6.2 修改nacos启动文件startup.sh
+##### 1.1.6.2 修改nacos启动文件startup.sh
 
 ```shell
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/local/jdk1.8.0_191 
@@ -93,7 +100,7 @@ WantedBy=multi-user.target
 
 ```
 
-#### 1.6.3 重启 使配置生效
+##### 1.1.6.3 重启 使配置生效
 
 ```shell
 systemctl daemon-reload        #重新加载服务配置
@@ -104,13 +111,13 @@ systemctl status nacos.service   #查看nacos服务的状态
 
 ```
 
-## 2. nacos 持久化
+### 1.2. nacos 持久化
 
 Nacos默认有自带嵌入式数据库derby，但是如果做集群模式的话，就不能使用自己的数据库不然每个节点一个数据库，那么数据就不统一了，需要使用外部的mysql
 
-### 2.1 配置nacos持久化
+#### 1.2.1 配置nacos持久化
 
-#### 2.1.1 修改 application.properties配置
+##### 1.2.1.1 修改 application.properties配置
 
 增加支持mysql数据源配置（目前只支持mysql，版本要求：5.6.5+）; 文件位置： nacos/conf/application.properties
 
@@ -128,7 +135,7 @@ db.user=root
 db.password=root
 ```
 
-#### 2.1.2 初始化nacos脚本
+##### 1.2.1.2 初始化nacos脚本
 
 初始化nacos 脚本
 
@@ -136,17 +143,16 @@ db.password=root
 /nacos/conf 下的nacos-mysql.sql脚本
 ```
 
-#### 2.1.2 重启nacos
+##### 1.2.1.2 重启nacos
 
 我重启后之前配置的配置信息不见了？
 
 ```java
-
 ```
 
-## 3. spring boot集成 nacos
+### 1.3. spring boot集成 nacos
 
-### 3.1 引入依赖
+#### 1.3.1 引入依赖
 
 * 注意 springboot 、springcloud Alibaba 、以及nacos 对应的版本。
 
@@ -190,7 +196,7 @@ db.password=root
 </dependency>
 ```
 
-### 3.2 修改配置以及启动类
+#### 1.3.2 修改配置以及启动类
 
 启动类增加注解：
 
@@ -228,35 +234,36 @@ spring:
     active: dev
 ```
 
-### 3.3 在nacos 配置 配置文件
+#### 1.3.3 在nacos 配置 配置文件
 
 在配置列表，点击“新增”
-> Data ID = spring.application.name + '-' + spring.profiles.active + '.' + spring.cloud.nacos.config.file-extension  
-> Group = spring.cloud.nacos.config.group  
-> 增加配置信息  
+
+> Data ID = spring.application.name + '-' + spring.profiles.active + '.' + spring.cloud.nacos.config.file-extension\
+> Group = spring.cloud.nacos.config.group\
+> 增加配置信息\
 > 点击发布，则会同步配置到项目，可通过日志查看是否生效
 
-### 3.4 共享配置
+#### 1.3.4 共享配置
 
 ```text
     服务名.yaml 将 系统同一配置写在里面 
 ```
 
-### 3.5 配置优先级
+#### 1.3.5 配置优先级
 
-![img_1.png](img_1.png)
+![img\_1.png](img_1.png)
 
-## 4. nacos 控制台的基本使用
-
-[Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
-
-## 5. nacos 用法 example
+### 1.4. nacos 控制台的基本使用
 
 [Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
 
-### 5.1 热配置 用例
+### 1.5. nacos 用法 example
 
-#### 5.1。1 @value 注解
+[Nacos--详解以及使用（全网最全）](https://blog.csdn.net/maoheguxiang/article/details/129718265)
+
+#### 1.5.1 热配置 用例
+
+##### 1.5.1.1 @value 注解
 
 在使用@Value注入值的类上增加注解@RefreshScope
 
@@ -267,7 +274,7 @@ spring:
 private String shardvalue;
 ```
 
-#### 5.1.2 @ConfigurationProperties 注解
+##### 1.5.5.1.2 @ConfigurationProperties 注解
 
 ```java
 
@@ -279,13 +286,13 @@ public class SystemTestProperties {
 }
 ```
 
-### 5.2 共享配置
+#### 1.5.2 共享配置
 
     生成一个 applicant.yaml 的文件 ，在nacos 新增对应的配置
 
-### 5.3 注册中心
+#### 1.5.3 注册中心
 
-#### 5.3.1 在配置文件中配置nacos为配置中心
+##### 1.5.3.1 在配置文件中配置nacos为配置中心
 
 ```yaml
 spring:
@@ -300,7 +307,7 @@ spring:
 #        namespace: configManager
 ```
 
-#### 5.3.2 dubbo 注册中心配置为 nacos
+##### 1.5.3.2 dubbo 注册中心配置为 nacos
 
 ```yaml
 dubbo:
@@ -315,23 +322,23 @@ dubbo:
   registry:
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
     group: nacosDemo
- ```
+```
 
-#### 5.3.3 启动类
+##### 1.5.3.3 启动类
 
 ```java
 @EnableDiscoveryClient // 开启nacos
 @EnableDubbo 
 ```
 
-#### 5.3.4 提供者
+##### 1.5.3.4 提供者
 
 ```java
 // 在service上增加注解
 @DubboService
 ```
 
-#### 5.3.5 消费者
+##### 1.5.3.5 消费者
 
 ```java
 // 使用 @DubboReference 注解
@@ -339,9 +346,9 @@ dubbo:
 private TestService testService;
 ```
 
-## Fegin 远程调用
+## 2. Fegin 远程调用
 
-### 简介
+### 2.1 简介
 
 > Feign是Spring Cloud提供的一个声明式的伪Http客户端， 它使得调用远程服务就像调用本地服务 一样简单， 只需要创建一个接口并添加一个注解即可。 Nacos很好的兼容了Feign， Feign默认集成了 Ribbon， 所以在Nacos下使用Fegin默认就实现了负 载均衡的效果。
 
@@ -355,14 +362,14 @@ private TestService testService;
 </dependency>
 ```
 
-### 开启feign
+### 2.2 开启feign
 
 ```java
 //启动类增加注解
 @EnableFeignClients 
 ```
 
-### demo 实例
+### 2.3 demo 实例
 
 1.编写接口
 
@@ -390,7 +397,7 @@ public interface FeignProductService {
 }
 ```
 
-3. 增加配置文件 这里我增加到了 all-server.yaml 文件中，每个服务的地址应该都是一样的，可以共用
+1. 增加配置文件 这里我增加到了 all-server.yaml 文件中，每个服务的地址应该都是一样的，可以共用
 
 ```yaml
 cloudAlibaba:
@@ -401,9 +408,9 @@ cloudAlibaba:
       address: localhost:8888/cloud-alibaba-product
 ```
 
-## Sentinel--服务容错
+## 3. Sentinel--服务容错
 
-### 常见的容错策略
+### 3.1 常见的容错策略
 
 1. 隔离
 2. 超时
@@ -411,13 +418,13 @@ cloudAlibaba:
 4. 熔断
 5. 降级
 
-### 常见的容错组件
+### 3.2 常见的容错组件
 
 1. Hystrix
 2. Resilience4J
 3. Sentnel
 
-### 集成sentinel
+### 3.3 集成sentinel
 
 1. 在maven 加入依赖
 
@@ -437,7 +444,7 @@ cloudAlibaba:
 
 ```
 
-2. 修改配置文件
+1. 修改配置文件
 
 ```yaml
 spring:
@@ -451,20 +458,22 @@ spring:
       eager: true
 ```
 
-3. 启动 sentinel 客户端
+### 3.3 模拟限流 熔断
+
+1. 启动 sentinel 客户端
 
 > 项目地址： sentinel-dashboard-zk
-> 访问地址： http://localhost:8080/#/dashboard/degrade/sentinel-dashboard  sentinel\sentinel
+> 访问地址： <http://localhost:8080/#/dashboard/degrade/sentinel-dashboard>  sentinel\sentinel
 
-4. 模拟限流
+1. 模拟限流
 
-> 4.1 登录到sentinel控制台  
-4.2 在簇点链路中选择需要限流的接口  
-4.3 点击流控 ，增加限流规则  
-4.4 可通过 jmeter 模拟并发请求，同时查看后台访问日志 (可限制并发数为1 ，这样能够明显看到日志减少)
-也可以同时swagger请求同一接口，返回 （Blocked by Sentinel (flow limiting)）
+> 4.1 登录到sentinel控制台\
+> 4.2 在簇点链路中选择需要限流的接口\
+> 4.3 点击流控 ，增加限流规则\
+> 4.4 可通过 jmeter 模拟并发请求，同时查看后台访问日志 (可限制并发数为1 ，这样能够明显看到日志减少)
+> 也可以同时swagger请求同一接口，返回 （Blocked by Sentinel (flow limiting)）
 
-## feign 整合 sentinel
+### 3.4 feign 整合 sentinel
 
 1. 增加依赖
 
@@ -476,7 +485,7 @@ spring:
 </dependency>
 ```
 
-2. 在配置文件中开启feign对sentinel的支持
+1. 在配置文件中开启feign对sentinel的支持
 
 ```yaml
 feign:
@@ -484,7 +493,7 @@ feign:
     enabled: true
 ```
 
-3. 创建feign service接口的容错实现类
+1. 创建feign service接口的容错实现类
 
 ```java
 /**
@@ -511,7 +520,7 @@ public class FeignProductServiceFallBack implements FeignProductService {
 }
 ```
 
-4. feign 调用service接口上指定容错类
+1. feign 调用service接口上指定容错类
 
 ```java
 /**
@@ -530,9 +539,9 @@ public interface FeignProductService {
 }
 ```
 
-## gateway
+## 4. gateway
 
-1. 引入maven依赖
+### 4.1 引入maven依赖
 
 * 需注意删除spring-boot-start-web相关依赖
 
@@ -565,13 +574,13 @@ public interface FeignProductService {
 
 ```
 
-2. 启动类增加 注解
+### 4.2. 启动类增加 注解
 
 ```java
 @EnableDiscoveryClient
 ```
 
-3. 编写配置文件
+### 4.3 编写配置文件
 
 ```yaml
 spring:
@@ -657,10 +666,10 @@ management:
 
 ```
 
-> - StripPrefix=1  
-    例如：（http://127.0.0.1:8181/product/list -> http://192.168.1.100:8086/list），
+> * StripPrefix=1\
+    >     例如：（<http://127.0.0.1:8181/product/list> -> <http://192.168.1.100:8086/list），>
 
-4. 测试调用
+### 4.4. 测试调用
 
 ```text
 http://localhost:7777/test/
@@ -668,12 +677,13 @@ http://localhost:7777/test/
 http://localhost:7777/product/cloud-alibaba-product/product/getProductById?pid=123123
 ```
 
-5. 网关限流  
-   从1.6.0版本开始，Sentinel提供了SpringCloud Gateway的适配模块，可以提供两种资源维度的限流：
-    * route维度：即在Spring配置文件中配置的路由条目，资源名为对应的routeId
-    * 自定义API维度：用户可以利用Sentinel提供的API来自定义一些API分组
+### 4.5. 网关限流
 
-5.1 引入依赖
+> 从1.6.0版本开始，Sentinel提供了SpringCloud Gateway的适配模块，可以提供两种资源维度的限流：
+> \* route维度：即在Spring配置文件中配置的路由条目，资源名为对应的routeId
+> \* 自定义API维度：用户可以利用Sentinel提供的API来自定义一些API分组
+
+#### 4.5.1 引入依赖
 
 ```xml
 
@@ -683,8 +693,9 @@ http://localhost:7777/product/cloud-alibaba-product/product/getProductById?pid=1
 </dependency>
 ```
 
-5.2 编写限流配置类  
-基于Sentinel 的Gateway限流是通过其提供的Filter来完成的，使用时只需注入对应的 SentinelGatewayFilter实例以及 SentinelGatewayBlockExceptionHandler 实例即可。
+#### 4.5.2 编写限流配置类
+
+> 基于Sentinel 的Gateway限流是通过其提供的Filter来完成的，使用时只需注入对应的 SentinelGatewayFilter实例以及 SentinelGatewayBlockExceptionHandler 实例即可。
 
 ```java
 package com.zhangz.springbootdemocloudalibabagateway.config;
@@ -810,17 +821,18 @@ public class GatewayConfiguration {
 
 ```
 
-5.3 测试限流效果  
-快速调用 http://localhost:7777/cloud-alibaba-product/product/getProductById?pid=123123
-返回信息 {"code":0,"message":"接口被限流了"}
+#### 4.5.3 测试限流效果\\
 
-## 链路追踪 Sleuth +Zinkin
+> 快速调用 <http://localhost:7777/cloud-alibaba-product/product/getProductById?pid=123123>
+> 返回信息 {"code":0,"message":"接口被限流了"}
+
+## 5. 链路追踪 Sleuth +Zinkin
 
 参考文档：
 
 * [spring cloud 调用链追踪：集成 Sleuth 和 Zipkin，实现链路打标](https://blog.csdn.net/sumguo10qq/article/details/129207291)
 
-### 集成 sleuth
+### 5.1集成 sleuth
 
 1. 引入maven依赖
 
@@ -832,7 +844,7 @@ public class GatewayConfiguration {
 </dependency>
 ```
 
-2. 增加配置文件
+1. 增加配置文件
 
 ```yaml
 spring:
@@ -849,23 +861,24 @@ spring:
 
 ```
 
-3. 启动项目 调用请求
+1. 启动项目 调用请求
 
 * 查看控制台日志
 
-> 2023-11-16 11:20:51.183  INFO [cloud-alibaba-order,b6e2419f74aaa0e3,b6e2419f74aaa0e3,true] 40236 --- [nio-9999-exec-1] c.z.s.controller.OrderController         : getOrderById params  orderId:u5etr  
-> 2023-11-16 11:20:51.183  INFO [serverId,traceId,spanId,true]
+> 2023-11-16 11:20:51.183  INFO \[cloud-alibaba-order,b6e2419f74aaa0e3,b6e2419f74aaa0e3,true] 40236 --- \[nio-9999-exec-1] c.z.s.controller.OrderController         : getOrderById params  orderId\:u5etr\
+> 2023-11-16 11:20:51.183  INFO \[serverId,traceId,spanId,true]
 
-## 整合zipkin
+### 5.2 整合zipkin
 
-### zipkin 服务端安装启动
+#### 5.2.1  zipkin 服务端安装启动
 
 1.下载zipkin-server
-> 下载地址  
-https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&c=exec&v=2.23.9
 
-2.命令行启动 zipkin-server  
-zipkin-server 内置了rabbitMQ 默认的RavvitMQ 的账号密码都是guset/guest 队列是 zipkin，  
+> 下载地址\
+> <https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&c=exec&v=2.23.9>
+
+2.命令行启动 zipkin-server\
+zipkin-server 内置了rabbitMQ 默认的RavvitMQ 的账号密码都是guset/guest 队列是 zipkin，\
 可通过下列参数 修改 :
 ![img.png](img.png)
 
@@ -876,13 +889,13 @@ java -jar zipkin-server-2.23.9-exec.jar --zipkin.collector.rabbitmq.addresses=lo
 java -jar zipkin-server-2.23.9-exec.jar
 ```
 
-3. 浏览器访问控制台
+1. 浏览器访问控制台
 
 ```text
 http://localhost:9411
 ```
 
-### zipkin 客户端集成
+#### 5.2.2 zipkin 客户端集成
 
 1.引入maven依赖
 
@@ -894,7 +907,7 @@ http://localhost:9411
 </dependency>
 ```
 
-2. 增加配置
+1. 增加配置
 
 ```yaml
 spring:
@@ -903,23 +916,25 @@ spring:
     discovery-client-enabled: false # 让nacos把她当作一个url而不是服务名
 ```
 
-3. 重启项目 调用接口 查看控制台
-   ![img_1.png](img_1.png)
+1. 重启项目 调用接口 查看控制台
+   ![img\_1.png](img_1.png)
 
-4. zipkin 数据持久化  
-   参考文档：
-    * [JavaEdge Docker搭建Zipkin，实现数据持久化到MySQL、ES](https://zhuanlan.zhihu.com/p/652677976)
-   > zipkin-server 数据默认保存在内存中的，最大存储为50000个span.  
-   zipkin 天然支持cassandra elasticsearch 以及 MySQL三种持久化方式。  
-   [zipkin 配置](https://github.com/openzipkin/zipkin/blob/master/zipkin-server/src/main/resources/zipkin-server-shared.yml)  
-   [持久化版本对照](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin%25EF%25BC%258C%25E5%258F%25AF%25E6%259F%25A5%25E7%259C%258B%25EF%25BC%259A)
+### 5.2.3  zipkin 数据持久化\\
 
-4.1 mysql 持久化   
-4.1.1 新建数据 zipkin 并且初始化建表脚本
+    参考文档：
+    *   [JavaEdge Docker搭建Zipkin，实现数据持久化到MySQL、ES](https://zhuanlan.zhihu.com/p/652677976)
+    > zipkin-server 数据默认保存在内存中的，最大存储为50000个span.\
+    > zipkin 天然支持cassandra elasticsearch 以及 MySQL三种持久化方式。\
+    > [zipkin 配置](https://github.com/openzipkin/zipkin/blob/master/zipkin-server/src/main/resources/zipkin-server-shared.yml)\
+    > [持久化版本对照](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin%25EF%25BC%258C%25E5%258F%25AF%25E6%259F%25A5%25E7%259C%258B%25EF%25BC%259A)
 
-[MySQL建表语句参考](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin/blob/master/zipkin-storage/mysql-v1/src/main/resources/mysql.sql)
+#### 5.2.3.1  mysql 持久化
 
-4.1.2 修改启动命令 增加MySQL 信息
+1. 新建数据 zipkin 并且初始化建表脚本
+
+> [MySQL建表语句参考](https://link.zhihu.com/?target=https%3A//github.com/openzipkin/zipkin/blob/master/zipkin-storage/mysql-v1/src/main/resources/mysql.sql)
+
+1. 修改启动命令 增加MySQL 信息
 
 ```shell
 docker run \
@@ -932,37 +947,38 @@ docker run \
 -e STORAGE_TYPE=mysql \
 -e MYSQL_DB=zipkin \
 -e MYSQL_TCP_PORT=3316 \
-openzipkin/zipkin:2.21.7```
+openzipkin/zipkin:2.21.7
+```
 
-4.1.3 启动项目并且调用后查看数据库进行验证    
+1. 启动项目并且调用后查看数据库进行验证
 
-4.2 es 持久化
+##### 5.2.3.2  es 持久化
 
-4.2.1 无需建表 只需启动时指定es配置
+1. 无需建表 只需启动时指定es配置
 
 ```shell
   java -DSTORAGE_TYPE=elasticsearch -DES_HOSTS=http://192.168.2.14:9200 -jar  zipkin-server-2.23.9-exec.jar > publish.log &
 ```
 
-4.2.2 重启zipkin-server 后调用服务 查询es
+1. 重启zipkin-server 后调用服务 查询es
 
 ```shell
 GET zipkin-span-2023-11-16/_search
 ```
 
-## 消息驱动 - rabbitMQ
+## 6. 消息驱动 - rabbitMQ
 
 参考文档：
 
-* [秃秃头头:SpringCloud项目整合RabbitMQ](https://blog.csdn.net/weixin_43028393/article/details/129818186)
-* [codeLearn:Spring Cloud 集成 RabbitMQ ](https://www.cnblogs.com/codeLearn/p/16964708.html)
+* [秃秃头头\:SpringCloud项目整合RabbitMQ](https://blog.csdn.net/weixin_43028393/article/details/129818186)
+* [codeLearn\:Spring Cloud 集成 RabbitMQ ](https://www.cnblogs.com/codeLearn/p/16964708.html)
 
-1. 应用场景
+### 6.1 应用场景
 
 * 异步接口
 * 流量消峰
 
-2. 引入maven依赖
+### 6.2 引入maven依赖
 
 ```xml
 
@@ -977,7 +993,7 @@ GET zipkin-span-2023-11-16/_search
 
 ```
 
-3. 增加配置信息
+### 6.3 增加配置信息
 
 ```yaml
 spring:
@@ -988,7 +1004,7 @@ spring:
     password: guest
 ```
 
-4. 发送消息
+1. 发送消息
 
 ```java
 
@@ -1001,7 +1017,9 @@ private RabbitTemplate rabbitTemplate;
 
 ```
 
-5. 接收消息
+### 6.4 简单使用
+
+1. 接收消息
 
 ```java
 
@@ -1021,30 +1039,35 @@ public class MqReceiveService {
 }
 ```
 
-## SMS - 短信服务
+## 7. SMS - 短信服务
 
-> 这里我选择了腾讯云哈，有腾讯云的账号 ，嗯~~ ，妈的申请签名还是比较麻烦的，稍后再实现把~
->
-腾讯云入口： https://console.cloud.tencent.com/developer  
-微信公众号入口： https://mp.weixin.qq.com/cgi-bin/home
+> 这里选择了阿里云哈，腾讯云的签名不好申请，阿里还给3个月100条免费短信的体验，直接就够用了。
+
+> 短信服务使用流程： 1.创建并且登录腾讯、阿里云；2.开通短信服务；3.申请签名；4.申请短信模版；
+
+腾讯云入口： <https://console.cloud.tencent.com/developer>\
+微信公众号入口： <https://mp.weixin.qq.com/cgi-bin/home>
 
 参考文档：
-> * https://blog.csdn.net/xiangyangsanren/article/details/134119525
+
+> * <https://blog.csdn.net/xiangyangsanren/article/details/134119525>
 
 阿里云短信发送demo：
-> https://next.api.aliyun.com/api-tools/demo/Dysmsapi/db7e1211-14e0-4b7b-9011-037dfb85d42e
 
-测试用例： 创建订单 ： 创建订单后，通过MQ异步发送下单成功通知，通知方式短信（阿里）
+> <https://next.api.aliyun.com/api-tools/demo/Dysmsapi/db7e1211-14e0-4b7b-9011-037dfb85d42e>
 
-## 分布式事务 - seata
+* 测试用例： 创建订单 ： 创建订单后，通过MQ异步发送下单成功通知，通知方式短信（阿里）
 
-1. 分布式事务解决方案
+## 8. 分布式事务 - seata
 
-1.1 全局事务
-> 二阶段提交，1.表决阶段 2 执行阶段；  
+### 8.1. 分布式事务解决方案
+
+#### 8.1.1 全局事务
+
+> 二阶段提交，1.表决阶段 2 执行阶段；\
 > 阶段一: 表决阶段，所有参与者都将本事务执行预提交，并将能否成功的信息反馈发给协调者。
 >
->阶段二: 执行阶段，协调者根据所有参与者的反馈，通知所有参与者，步调一致地执行提交或者回 滚。1 优点：
+> 阶段二: 执行阶段，协调者根据所有参与者的反馈，通知所有参与者，步调一致地执行提交或者回 滚。1 优点：
 
 * 提高了数据一致性的概率，实现成本低
 
@@ -1054,11 +1077,12 @@ public class MqReceiveService {
 * 同步阻塞：延迟了提交时间，加成了资源阻塞时间
 * 数据不一致：提交第二节点，依然存在commit结果的未知。
 
-1.2 可靠消息服务
+#### 8.1.1.2 可靠消息服务
+
 > 基于可靠消息服务的方案是通过消息中间件保证上、下游应用数据操作的一致性。假设有A和B两个 系统，分别可以处理任务A和任务B。此时存在一个业务流程，需要将任务A和任务B在同一个事务中处 理。就可以使用消息中间件来实现这种分布式事务。
-![img_2.png](img_2.png)
-过程：  
-第一步: 消息由系统A投递到中间件
+> ![img\_2.png](img_2.png)
+> 过程：\
+> 第一步: 消息由系统A投递到中间件
 
 1. 在系统A处理任务A前，首先向消息中间件发送一条消息
 2. 消息中间件收到后将该条消息持久化，但并不投递。持久化成功后，向A回复一个确认应答
@@ -1078,40 +1102,232 @@ public class MqReceiveService {
 
 基于可靠消息服务的分布式事务，前半部分使用异步，注重性能；后半部分使用同步，注重开发成本。
 
-1.3 最大努力通知
+#### 8.1.1.3 最大努力通知
 
-1.4 TCC事务
+#### 8.1.1.4 TCC事务
 
-2. seata 介绍
+### 8.2  seata 介绍
 
-2.1 seata主要组件
+#### 8.2.1 seata主要组件
 
 * TC : Transaction Ccoordinator : 事务协调器，管理全局的分支事务的状态，用于全局性事务的提交 和回滚
-* TM:Transaction Managet: 事务管理器 用于开启，回滚，提交事务
+* TM\:Transaction Managet: 事务管理器 用于开启，回滚，提交事务
 * RM: Resource manager 资源管理器，用于分支事务上的资源管理，向TC注册分支事务，商保分支事务的状态，接受TC的命令来提交或者回滚分支事务。
-  ![img_3.png](img_3.png)
-  Seata的执行流程如下:
+  ![img\_3.png](img_3.png)
 
-1. A服务的TM向TC申请开启一个全局事务，TC就会创建一个全局事务并返回一个唯一的XID
-2. A服务的RM向TC注册分支事务，并及其纳入XID对应全局事务的管辖
-3. A服务执行分支事务，向数据库做操作
-4. A服务开始远程调用B服务，此时XID会在微服务的调用链上传播
-5. B服务的RM向TC注册分支事务，并将其纳入XID对应的全局事务的管辖
-6. B服务执行分支事务，向数据库做操作
-7. 全局事务调用链处理完毕，TM根据有无异常向TC发起全局事务的提交或者回滚
-8. TC协调其管辖之下的所有分支事务， 决定是否回滚
+Seata的执行流程如下:
 
-Seata实现2PC与传统2PC的差别：
+> 1. A服务的TM向TC申请开启一个全局事务，TC就会创建一个全局事务并返回一个唯一的XID
+> 2. A服务的RM向TC注册分支事务，并及其纳入XID对应全局事务的管辖
+> 3. A服务执行分支事务，向数据库做操作
+> 4. A服务开始远程调用B服务，此时XID会在微服务的调用链上传播
+> 5. B服务的RM向TC注册分支事务，并将其纳入XID对应的全局事务的管辖
+> 6. B服务执行分支事务，向数据库做操作
+> 7. 全局事务调用链处理完毕，TM根据有无异常向TC发起全局事务的提交或者回滚
+> 8. TC协调其管辖之下的所有分支事务， 决定是否回滚
+
+#### 8.2.2 Seata实现2PC与传统2PC的差别
 
 1. 架构层次方面，传统2PC方案的 RM 实际上是在数据库层，RM本质上就是数据库自身，通过XA协 议实现，而 Seata的RM是以jar包的形式作为中间件层部署在应用程序这一侧的。
 2. 两阶段提交方面，传统2PC无论第二阶段的决议是commit还是rollback，事务性资源的锁都要保 持到Phase2完成才释放。而Seata的做法是在Phase1 就将本地事务提交，这样就可以省去Phase2
    持锁的时间，整体提高效率
 
-2.2 seata 的使用
+### 8.3 seata 的简单使用
 
-## rpc通信 Dubbo
+### 8.3.1 案例介绍
 
-1. 引入maven依赖
+![img_4.png](img_4.png)
+
+### 8.3.2 编写场景代码
+
+1.order 服务
+
+```java
+ @Override
+public Order createOrder(String pid,int number)throws Exception{
+        String orderId=UUIDUtils.getUUID32();
+
+        // Product productById = productRPCService.getProductById(pid);
+        // log.info("dubbo 查询商品服务返回商品信息|{}", productById);
+
+        String productStr=feignProductService.getProductById(pid);
+        log.info("查询商品服务返回商品信息|{}",productStr);
+        Product product=JSON.parseObject(productStr,Product.class);
+
+        if("-1".equals(product.getPid())){
+        return Order.builder().oid(orderId).pid("-1").pname("熔断啦").build();
+        }
+
+        Order build=Order.builder().oid(orderId).pid(pid).pname(product.getPname()).pprice(new BigDecimal("12.7")).number(number).uid("1111111").username("1111111").build();
+        orderMapper.insert(build);
+        log.info("生成订单信息|{}",JSON.toJSONString(build));
+
+        // 扣减库存
+        feignProductService.reduceInventory(pid,number);
+
+        // 订单生成以后 发送消息通知用户 已下单
+        rabbitTemplate.convertAndSend(MQConfig.ORDER_EXCHANGE,MQConfig.ORDER_RUTEKEY,"订单【"+orderId+"】已下单！");
+        return build;
+        }
+```
+
+2. 商品服务
+
+```java
+ @Override
+public void reduceInventory(String pid,int num)throws Exception{
+
+        // 查询库存
+        Product product=productMapper.selectById(pid);
+        if(null==product){
+        throw new Exception("商品【"+pid+"】不存在");
+        }
+
+        if(product.getStock()<num){
+        log.error("商【{}】,库存不足。库存数量：{},需扣减数量:{}",pid,product.getStock(),num);
+        throw new Exception("库存不足");
+        }
+
+        // 减少库存
+        Integer oldSock=product.getStock();
+        Integer newStock=product.getStock()-num;
+        product.setStock(newStock);
+        productMapper.updateById(product);
+
+        log.info("商品【{}】的库存数量为:{} = {} - {}",product.getPid(),newStock,oldSock,num);
+
+        }
+```
+
+### 8.3.3 模拟异常请求
+
+```text
+调用创建订单的请求，当数量大于库存时，商品服务异常但是订单以及创建入库
+```
+
+### 8.3.4 seate 安装以及启动
+
+#### 8.3.4.1 seate 下载
+
+* 下载地址： https://github.com/seata/seata/releases/v0.9.0/
+
+#### 8.3.4.2 seate 配置并且启动
+
+1. conf/registry.conf
+
+```shell
+registry {
+  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
+  type = "nacos"
+  nacos {
+    # nacos地址
+    serverAddr = "192.168.1.225"
+    namespace = "public"
+    cluster = "default"
+  }
+  eureka {
+    serviceUrl = "http://localhost:8761/eureka"
+    application = "default"
+    weight = "1"
+  }
+  redis {
+    serverAddr = "localhost:6379"
+    db = "0"
+  }
+  zk {
+    cluster = "default"
+    serverAddr = "127.0.0.1:2181"
+    session.timeout = 6000
+    connect.timeout = 2000
+  }
+  consul {
+    cluster = "default"
+    serverAddr = "127.0.0.1:8500"
+  }
+  etcd3 {
+    cluster = "default"
+    serverAddr = "http://localhost:2379"
+  }
+  sofa {
+    serverAddr = "127.0.0.1:9603"
+    application = "default"
+    region = "DEFAULT_ZONE"
+    datacenter = "DefaultDataCenter"
+    cluster = "default"
+    group = "SEATA_GROUP"
+    addressWaitTime = "3000"
+  }
+  file {
+    name = "file.conf"
+  }
+}
+```
+
+2. conf/nacos-config.txt
+
+> 这里的语法为： service.vgroup_mapping.${your-service-gruop}=default ，中间的 ${your-service-gruop} 为自己定义的服务组名称， 这里需要我们在程序的配置文件中配置。
+
+```text
+service.vgroup_mapping.cloud-alibaba-order=default
+service.vgroup_mapping.cloud-alibaba-product=default
+```
+
+3.初始化nacos的配置
+
+```shell
+# 初始化seata 的nacos配置
+# 注意: 这里要保证nacos是已经正常运行的
+cd conf
+nacos-config.sh 192.168.1.225
+```
+
+执行成功后可以打开Nacos的控制台，在配置列表中，可以看到初始化了很多Group为SEATA_GROUP 的配置。
+
+4. 启动seate
+
+```shell
+cd bin
+seata-server.sh -p 9000 -m file
+```
+
+启动成功后，在nacos服务列表会出现一个serverAddr的服务
+
+### 8.3.5 使用seate实现事务
+
+#### 8.3.5.1 初始化SQL脚本
+
+```sql
+CREATE TABLE `undo_log`
+(
+`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+`branch_id` BIGINT(20) NOT NULL,
+`xid` VARCHAR(100) NOT NULL,
+`context` VARCHAR(128) NOT NULL,
+`rollback_info` LONGBLOB NOT NULL,
+`log_status` INT(11) NOT NULL,
+`log_created` DATETIME NOT NULL,
+`log_modified` DATETIME NOT NULL,
+`ext` VARCHAR(100) DEFAULT NULL,
+PRIMARY KEY (`id`),
+UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)
+) ENGINE = INNODB
+AUTO_INCREMENT = 1
+DEFAULT CHARSET = utf8;
+```
+
+#### 8.3.5.2 引入maven依赖
+
+#### 8.3.5.3 配置Bean
+
+#### 8.3.5.4 修改配置文件
+
+#### 8.3.5.5 通过注解开启分布式事务
+
+#### 8.3.5.6 测试事务是否生效
+
+## 9. rpc通信 Dubbo
+
+### 9.1 引入maven依赖
 
 ```xml
      <!--dubbo-->
@@ -1122,7 +1338,7 @@ Seata实现2PC与传统2PC的差别：
 </dependency>
 ```
 
-2.修改 配置
+### 9.2 修改 配置
 
 ```yaml
 #provider
@@ -1150,17 +1366,17 @@ dubbo:
     base-packages: com.zhangz
 ```
 
-3. 修改启动类
+### 9.3 修改启动类
 
 ```java
 @DubboComponentScan
 ```
 
-4. 使用
+### 9.4 简单使用
 
 ```java
 // 提供者
-
+// 2.7.8  后的版本与@Service注解区分 改为@DubboService
 @DubboService(interfaceClass = ProductRpcService.class)
 @Slf4j
 public class ProductRpcServiceImpl implements ProductRpcService {
@@ -1186,6 +1402,8 @@ public class ProductRpcServiceImpl implements ProductRpcService {
 
 ```java
 //消费者
+// 通过@DubboReference 注解注入dubbo接口
 @DubboReference
 private ProductRpcService productRPCService;
 ```
+

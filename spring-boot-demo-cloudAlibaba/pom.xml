@@ -26,6 +26,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <swagger2.version>2.9.2</swagger2.version>
         <swagger-ui.version>1.9.6</swagger-ui.version>
         <swagger-models.version>1.5.22</swagger-models.version>
+        
+        <mybatis-plus.version>3.2.0</mybatis-plus.version>
+        <guava.version>28.2-jre</guava.version>
+        <com.h2database.version>2.1.214</com.h2database.version>
+        <com.alibaba.druid.version>1.2.4</com.alibaba.druid.version>
+
+        
     </properties>
     
     <dependencyManagement>
@@ -117,9 +124,49 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-starter-dubbo</artifactId>
-                <version>2.2.7.RELEASE</version>
+                <version>2.2.7.RELEASE</version>    
+            </dependency>
+            
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            
+            <!--<dependency>-->
+            <!--    <groupId>com.h2database</groupId>-->
+            <!--    <artifactId>h2</artifactId>-->
+            <!--    <version>${com.h2database.version}</version>-->
+            <!--</dependency>-->
+            <!-- 连接池  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${com.alibaba.druid.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
         </dependencies>
         
     </dependencyManagement>

@@ -1,11 +1,13 @@
 package com.zhangz.springbootdemocloudalibabacommon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -13,13 +15,22 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("CLOUD_BS_ORDER")
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 public class Order implements Serializable {
-
+    @TableId("OID")
     private String oid;// 订单id
-    private Integer uid;// 用户id
+    @TableField("UID")
+    private String uid;// 用户id
+    @TableField("USERNAME")
     private String username;// 用户名
+    @TableField("PID")
     private String pid;// 商品id
+    @TableField("PNAME")
     private String pname;// 商品名称
-    private Double pprice;// 商品单价
+    @TableField("PPRICE")
+    private BigDecimal pprice;// 商品单价
+    @TableField("NUMBER")
     private Integer number;// 购买数量
  }

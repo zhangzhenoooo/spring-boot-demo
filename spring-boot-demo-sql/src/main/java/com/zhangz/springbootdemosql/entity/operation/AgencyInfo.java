@@ -19,8 +19,8 @@ import lombok.experimental.Accessors;
  * @since 2020-04-21
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
+
+
 @TableName("C_OC_B_AGENCY_INFO")
 public class AgencyInfo implements Serializable {
 

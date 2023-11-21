@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangz.springbootdemocloudalibabaorder.dao.OrderMapper">
+
+    <sql id="tableName">CLOUD_BS_ORDER</sql>
+    
+    <select id="queryById" resultType="com.zhangz.springbootdemocloudalibabacommon.entity.Order">
+        select * from
+        <include refid="tableName"/>
+        <where>
+            oid = #{oid,jdbcType=VARCHAR}
+        </where>
+    </select>
+</mapper>

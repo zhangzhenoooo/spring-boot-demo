@@ -81,7 +81,11 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-dubbo</artifactId>
         </dependency>
-         
+        <!--&lt;!&ndash;分布式事务-seate&ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>com.alibaba.cloud</groupId>-->
+        <!--    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+        <!--</dependency>-->
 
     </dependencies>
 

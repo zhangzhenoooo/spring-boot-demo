@@ -108,6 +108,7 @@ mybatis-plus:
 ## 4.连接H2数据库
 ### 4.1 连接异常:org.h2.jdbc.JdbcSQLSyntaxErrorException:Table “CATALOGS“ not found；SQL statement
 ```shell
+
 #原因
 idea 使用 SELECT CATALOG_NAME FROM INFORMATION_SCHEMA.CATALOGS 连接 h2数据库，新版本的h2不支持该语句导致
 #解决方案

@@ -9,6 +9,6 @@ import java.util.List;
 public interface OrderService {
     List<Order> getOrderById(String productName);
 
-    Order createOrder(String pid) throws Exception;
+    Order createOrder(String pid,int number) throws Exception;
     
 }

@@ -36,13 +36,21 @@ public class ProductController {
     @SentinelResource(value = "product.getProductById", blockHandler = "productCommonHandler")
     public String getProductById(@RequestParam("pid") String pid) throws Exception {
         log.info("getProductByName params  pid:{}", pid);
-        if ("-1".equals(pid)){
+        if ("-1".equals(pid)) {
             throw new Exception("测试熔断");
         }
-        
+
         Product p = productService.getProductById(pid);
         return JSON.toJSONString(p);
     }
+
+    @GetMapping("/reduceInventory")
+    @ResponseBody
+    @SentinelResource(value = "product.getProductByName", blockHandler = "productCommonHandler")
+    public void reduceInventory(@RequestParam("pid") String pid,@RequestParam("num") int num) throws Exception {
+        log.info("调用减库存 ，商品ID：{}，数量“{}", pid, num);
+         productService.reduceInventory(pid,num);
+     }
 
     public String productCommonHandler(HttpServletRequest request, BlockException blockException) {
         log.error("接口【{}】调用失败", request.getRequestURI());

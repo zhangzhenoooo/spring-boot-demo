@@ -30,9 +30,9 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public Result createOrder(@RequestParam("pid") String pid) throws Exception {
-        log.info("getOrderById params pid:{}", pid);
-        Order order = orderService.createOrder(pid);
+    public Result createOrder(@RequestParam("pid") String pid,@RequestParam("number") int number) throws Exception {
+        log.info("getOrderById params pid:{},number:{}", pid,number);
+        Order order = orderService.createOrder(pid,number);
         return Result.success(JSON.toJSONString(order));
     }
 }
