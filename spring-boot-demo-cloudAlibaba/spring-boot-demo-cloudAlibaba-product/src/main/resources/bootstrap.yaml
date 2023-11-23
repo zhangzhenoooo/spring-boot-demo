@@ -69,3 +69,21 @@ feign:
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/*/${spring.datasource.name}/*Mapper.xml
+
+seata:
+  #  spring.datasource.dynami.seata 需要同时开启
+  enabled: true
+  # 关闭自动代理
+  enable-auto-data-source-proxy: false
+  # 事务群组（可以每个应用独立取名，也可以使用相同的名字）
+  tx-service-group: cloud_alibaba_group
+  service:
+    vgroup-mapping:
+      cloud_alibaba_group: default
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 192.168.1.225:8848
+      application: seata-server
+      group: DEFAULT_GROUP
+      

@@ -3,6 +3,7 @@ package com.zhangz.springbootdemocloudalibabaproduct.service.impl;
 import com.zhangz.springbootdemocloudalibabacommon.entity.Product;
 import com.zhangz.springbootdemocloudalibabaproduct.dao.ProductMapper;
 import com.zhangz.springbootdemocloudalibabaproduct.service.ProductService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @GlobalTransactional(name = "cloud_alibaba_group",rollbackFor = Exception.class) // 全局事务控制
     public void reduceInventory(String pid, int num) throws Exception {
 
         // 查询库存

@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    // @GlobalTransactional // 全局事务控制
+    @GlobalTransactional(name = "cloud_alibaba_group") // 全局事务控制
     public Order createOrder(String pid,int number) throws Exception {
         String orderId = UUIDUtils.getUUID32();
 

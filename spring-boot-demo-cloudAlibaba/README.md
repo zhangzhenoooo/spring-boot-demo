@@ -22,7 +22,7 @@
   对应的nacos [版本对照](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
   ;
 * 下载选择 Assets 下的包
-  ![img.png](img.png)
+  ![img.png](files/img.png)
 
 ```shell
 wget https://github.com/alibaba/nacos/releases/download/1.4.1/nacos-server-1.4.1.tar.gz
@@ -251,7 +251,7 @@ spring:
 
 #### 1.3.5 配置优先级
 
-![img\_1.png](img_1.png)
+![img\_1.png](files/img_1.png)
 
 ### 1.4. nacos 控制台的基本使用
 
@@ -880,7 +880,7 @@ spring:
 2.命令行启动 zipkin-server\
 zipkin-server 内置了rabbitMQ 默认的RavvitMQ 的账号密码都是guset/guest 队列是 zipkin，\
 可通过下列参数 修改 :
-![img.png](img.png)
+![img.png](files/img.png)
 
 ```shell
 # 连接 RabbitmQ 
@@ -917,7 +917,7 @@ spring:
 ```
 
 1. 重启项目 调用接口 查看控制台
-   ![img\_1.png](img_1.png)
+   ![img\_1.png](files/img_1.png)
 
 ### 5.2.3  zipkin 数据持久化\\
 
@@ -1080,7 +1080,7 @@ public class MqReceiveService {
 #### 8.1.1.2 可靠消息服务
 
 > 基于可靠消息服务的方案是通过消息中间件保证上、下游应用数据操作的一致性。假设有A和B两个 系统，分别可以处理任务A和任务B。此时存在一个业务流程，需要将任务A和任务B在同一个事务中处 理。就可以使用消息中间件来实现这种分布式事务。
-> ![img\_2.png](img_2.png)
+> ![img\_2.png](files/img_2.png)
 > 过程：\
 > 第一步: 消息由系统A投递到中间件
 
@@ -1113,7 +1113,7 @@ public class MqReceiveService {
 * TC : Transaction Ccoordinator : 事务协调器，管理全局的分支事务的状态，用于全局性事务的提交 和回滚
 * TM\:Transaction Managet: 事务管理器 用于开启，回滚，提交事务
 * RM: Resource manager 资源管理器，用于分支事务上的资源管理，向TC注册分支事务，商保分支事务的状态，接受TC的命令来提交或者回滚分支事务。
-  ![img\_3.png](img_3.png)
+  ![img\_3.png](files/img_3.png)
 
 Seata的执行流程如下:
 
@@ -1134,9 +1134,13 @@ Seata的执行流程如下:
 
 ### 8.3 seata 的简单使用
 
+* 参考文档：
+
+1. https://blog.csdn.net/weixin_43904285/article/details/132038938
+
 ### 8.3.1 案例介绍
 
-![img_4.png](img_4.png)
+![img_4.png](files/img_4.png)
 
 ### 8.3.2 编写场景代码
 
@@ -1209,121 +1213,226 @@ public void reduceInventory(String pid,int num)throws Exception{
 
 #### 8.3.4.1 seate 下载
 
-* 下载地址： https://github.com/seata/seata/releases/v0.9.0/
+* 下载地址：https://github.com/seata/seata/releases/download/v1.6.1/seata-server-1.6.1.zip
 
-#### 8.3.4.2 seate 配置并且启动
+#### 8.3.4.2 seate 修改配置
 
-1. conf/registry.conf
+1. apoplication.yml
 
-```shell
-registry {
-  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
-  type = "nacos"
-  nacos {
-    # nacos地址
-    serverAddr = "192.168.1.225"
-    namespace = "public"
-    cluster = "default"
-  }
-  eureka {
-    serviceUrl = "http://localhost:8761/eureka"
-    application = "default"
-    weight = "1"
-  }
-  redis {
-    serverAddr = "localhost:6379"
-    db = "0"
-  }
-  zk {
-    cluster = "default"
-    serverAddr = "127.0.0.1:2181"
-    session.timeout = 6000
-    connect.timeout = 2000
-  }
-  consul {
-    cluster = "default"
-    serverAddr = "127.0.0.1:8500"
-  }
-  etcd3 {
-    cluster = "default"
-    serverAddr = "http://localhost:2379"
-  }
-  sofa {
-    serverAddr = "127.0.0.1:9603"
-    application = "default"
-    region = "DEFAULT_ZONE"
-    datacenter = "DefaultDataCenter"
-    cluster = "default"
-    group = "SEATA_GROUP"
-    addressWaitTime = "3000"
-  }
-  file {
-    name = "file.conf"
-  }
+```yaml
+server:
+  port: 7091
+spring:
+  application:
+    name: seata-server
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ../runninglogs/logs/seata
+  extend:
+    logstash-appender:
+      destination: 127.0.0.1:4560
+    kafka-appender:
+      bootstrap-servers: 127.0.0.1:9092
+      topic: logback_to_logstash
+console:
+  user:
+    username: seata
+    password: seata
+seata:
+  config:
+    # support: nacos, consul, apollo, zk, etcd3
+    type: nacos
+    nacos:
+      server-addr: 192.168.1.225:8848
+      group: DEFAULT_GROUP
+      data-id: seataServerConfig.yml
+  registry:
+    # support: nacos, eureka, redis, zk, consul, etcd3, sofa
+    type: nacos
+    nacos:
+      application: seata-server
+      group: DEFAULT_GROUP
+      server-addr: 192.168.1.225:8848
+  store:
+    # support: file 、 db 、 redis
+    mode: db
+    db:
+      datasource: druid
+      db-type: mysql
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.1.188:3306/zz_test?rewriteBatchedStatements=true
+      user: root
+      password: root
+      min-conn: 10
+      max-conn: 100
+      global-table: global_table
+      branch-table: branch_table
+      lock-table: lock_table
+      distributed-lock-table: distributed_lock
+      query-limit: 1000
+      max-wait: 5000
+  #  server:
+  #    service-port: 8091 #If not configured, the default is '${server.port} + 1000'
+  # 将安全认证进行去除，因为可能会导致一定的问题
+  security:
+    secretKey: SeataSecretKey0c382ef121d778043159209298fd40bf3850a017
+    tokenValidityInMilliseconds: 1800000
+    ignore:
+      urls: /,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/api/v1/auth/login
+```
+
+2. seata-server.bat 增加 pause ，就直接可以双击启动啦
+
+```bat
+pause
+``` 
+
+#### 8.3.4.3 seate 配置数据库
+
+1. 修改applicant.yml
+
+```yaml
+  store:
+    # support: file 、 db 、 redis
+    mode: db
+    db:
+      datasource: druid
+      db-type: mysql
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.1.188:3306/zz_test?rewriteBatchedStatements=true
+      user: root
+      password: root
+      min-conn: 10
+      max-conn: 100
+      global-table: global_table
+      branch-table: branch_table
+      lock-table: lock_table
+      distributed-lock-table: distributed_lock
+      query-limit: 1000
+      max-wait: 5000
+```
+
+2. 初始化脚本
+
+> 脚本位置 ： seata\script\server\db
+
+#### 启动 seata
+
+> 双击 seata-server.bat
+> 查看nacos 服务列表是否有seata-server 的服务
+
+### 8.3.5 使用 seata 实现分布式事务
+
+#### 8.3.5.1 引入 maven依赖
+
+```xml
+    <!--seata相关的配置-->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+    <version>2022.0.0.0-RC2</version>
+</dependency>
+
+```
+
+#### 8.3.5.2 配置seata
+
+1. bootstrap.yaml
+
+```yaml
+seata:
+  #  spring.datasource.dynami.seata 需要同时开启
+  enabled: true
+  # 关闭自动代理
+  enable-auto-data-source-proxy: false
+  # 事务群组（可以每个应用独立取名，也可以使用相同的名字）
+  tx-service-group: cloud_alibaba_group
+  service:
+    vgroup-mapping:
+      cloud_alibaba_group: default
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 192.168.1.225:8848
+      application: seata-server
+      group: DEFAULT_GROUP
+```
+
+#### 8.3.5.3 修改数据源代理为seata
+
+> 配置数据源 为 com.alibaba.druid.pool.DruidDataSource，否则 事务会不生效
+
+```java
+package com.zhangz.springbootdemocloudalibabaproduct.config;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import io.seata.rm.datasource.DataSourceProxy;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+@Configuration
+public class DataSourceProxyConfig {
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DruidDataSource druidDataSource() {
+        return new DruidDataSource();
+    }
+
+    @Primary
+    @Bean
+    public DataSourceProxy dataSource(DruidDataSource druidDataSource) {
+        return new DataSourceProxy(druidDataSource);
+    }
 }
 ```
 
-2. conf/nacos-config.txt
+#### 8.3.5.4 解决fegin调用不生效问题
 
-> 这里的语法为： service.vgroup_mapping.${your-service-gruop}=default ，中间的 ${your-service-gruop} 为自己定义的服务组名称， 这里需要我们在程序的配置文件中配置。
+> 在fegin header 中加入TX_XID，否则fegin 调用的事务会不生效
 
-```text
-service.vgroup_mapping.cloud-alibaba-order=default
-service.vgroup_mapping.cloud-alibaba-product=default
+```java
+package com.zhangz.springbootdemocloudalibabaproduct.config;
+
+import javax.servlet.http.HttpServletRequest;
+
+import io.seata.core.context.RootContext;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
+
+@Configuration
+public class FeignConfig implements RequestInterceptor {
+
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        requestTemplate.header(HttpHeaders.AUTHORIZATION, request.getHeader(HttpHeaders.AUTHORIZATION));
+        //seata分布式事务
+        requestTemplate.header(RootContext.KEY_XID, RootContext.getXID());
+    }
+
+}
+
 ```
 
-3.初始化nacos的配置
+#### 8.3.5.5 引入注解 @GlobalTransactional
 
-```shell
-# 初始化seata 的nacos配置
-# 注意: 这里要保证nacos是已经正常运行的
-cd conf
-nacos-config.sh 192.168.1.225
+> 在需要分布式事务的地方引入 下列注解
+
+```java
+  @GlobalTransactional(name = "cloud_alibaba_group", rollbackFor = Exception.class) 
 ```
 
-执行成功后可以打开Nacos的控制台，在配置列表中，可以看到初始化了很多Group为SEATA_GROUP 的配置。
+#### 8.3.5.6 启动项目进行测试
 
-4. 启动seate
-
-```shell
-cd bin
-seata-server.sh -p 9000 -m file
-```
-
-启动成功后，在nacos服务列表会出现一个serverAddr的服务
-
-### 8.3.5 使用seate实现事务
-
-#### 8.3.5.1 初始化SQL脚本
-
-```sql
-CREATE TABLE `undo_log`
-(
-`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-`branch_id` BIGINT(20) NOT NULL,
-`xid` VARCHAR(100) NOT NULL,
-`context` VARCHAR(128) NOT NULL,
-`rollback_info` LONGBLOB NOT NULL,
-`log_status` INT(11) NOT NULL,
-`log_created` DATETIME NOT NULL,
-`log_modified` DATETIME NOT NULL,
-`ext` VARCHAR(100) DEFAULT NULL,
-PRIMARY KEY (`id`),
-UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)
-) ENGINE = INNODB
-AUTO_INCREMENT = 1
-DEFAULT CHARSET = utf8;
-```
-
-#### 8.3.5.2 引入maven依赖
-
-#### 8.3.5.3 配置Bean
-
-#### 8.3.5.4 修改配置文件
-
-#### 8.3.5.5 通过注解开启分布式事务
-
-#### 8.3.5.6 测试事务是否生效
+> 调用创建订单接口，数量要大于库存数量。 会看到订单表并未增加数据。
 
 ## 9. rpc通信 Dubbo
 

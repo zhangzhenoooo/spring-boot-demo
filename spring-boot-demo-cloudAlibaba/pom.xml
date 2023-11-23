@@ -167,6 +167,15 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
+            
+            
+            <!--seata相关的配置-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                <version>2022.0.0.0-RC2</version>
+            </dependency>
+
         </dependencies>
         
     </dependencyManagement>
